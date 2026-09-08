@@ -1,0 +1,51 @@
+import type { ResumeTemplate } from '@/types/resume'
+import { makeLayout, FONTS } from '../helper'
+import './style.css'
+
+/** 专业分类模板 */
+export const professionalTemplates: ResumeTemplate[] = [
+  {
+    id: 'pro-navy',
+    name: '沉稳藏青',
+    category: 'professional',
+    desc: '藏青竖条标题，金融/咨询首选',
+    className: 'tpl-pro-navy',
+    layout: makeLayout({ themeColor: '#1f3a5f', moduleSpacing: 12 }),
+    titleStyle: 'sidebar',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
+  {
+    id: 'pro-band',
+    name: '顶部蓝带',
+    category: 'professional',
+    desc: '顶部通栏蓝色头部，气场十足',
+    className: 'tpl-pro-band',
+    layout: makeLayout({ themeColor: '#2c6ec8' }),
+    titleStyle: 'underline',
+    profileStyle: 'band',
+    pageStyle: 'single',
+  },
+  {
+    id: 'pro-sidebar-blue',
+    name: '蓝色侧栏',
+    category: 'professional',
+    desc: '左侧蓝色信息栏，双栏排版',
+    className: 'tpl-pro-sidebar-blue',
+    layout: makeLayout({ themeColor: '#2c6ec8', pageMargin: 8 }),
+    titleStyle: 'underline',
+    profileStyle: 'left',
+    pageStyle: 'sidebar-left',
+  },
+  {
+    id: 'pro-sidebar-teal',
+    name: '青色侧栏',
+    category: 'professional',
+    desc: '左侧深青信息栏，沉稳专业',
+    className: 'tpl-pro-sidebar-teal',
+    layout: makeLayout({ themeColor: '#0e7490', pageMargin: 8 }),
+    titleStyle: 'underline',
+    profileStyle: 'left',
+    pageStyle: 'sidebar-left',
+  },
+]

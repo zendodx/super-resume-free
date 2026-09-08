@@ -1,0 +1,30 @@
+/* 专业分类模板专属样式 */
+
+.tpl-pro-navy {
+  --pv-theme: #1f3a5f;
+}
+.tpl-pro-navy .pv-module-title {
+  font-size: 1.15em;
+}
+
+.tpl-pro-band {
+  --pv-theme: #2c6ec8;
+  --pv-band-bg: #2c6ec8;
+}
+
+.tpl-pro-sidebar-blue {
+  --pv-theme: #2c6ec8;
+  --pv-sidebar-bg: #2c6ec8;
+  --pv-sidebar-text: #ffffff;
+  --pv-sidebar-sub: rgba(255, 255, 255, 0.82);
+}
+
+.tpl-pro-sidebar-teal {
+  --pv-theme: #0e7490;
+  --pv-sidebar-bg: #155e75;
+  --pv-sidebar-text: #ffffff;
+  --pv-sidebar-sub: rgba(255, 255, 255, 0.8);
+}
+.tpl-pro-sidebar-teal .pv-module-title {
+  border-bottom-style: dashed;
+}

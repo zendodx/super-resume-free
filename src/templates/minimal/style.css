@@ -1,0 +1,26 @@
+/* 简约分类模板专属样式 */
+
+.tpl-min-plain {
+  --pv-theme: #000000;
+}
+.tpl-min-plain .pv-module-title {
+  font-size: 1.15em;
+  letter-spacing: 0.1em;
+}
+
+.tpl-min-compact {
+  --pv-theme: #000000;
+}
+
+.tpl-min-banner {
+  --pv-theme: #475569;
+  --pv-banner-bg: #edf1f6;
+}
+
+.tpl-min-air {
+  --pv-theme: #22262b;
+}
+.tpl-min-air .pv-module-title {
+  font-size: 1.2em;
+  letter-spacing: 0.2em;
+}

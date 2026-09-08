@@ -1,0 +1,89 @@
+/* 经典分类模板专属样式 */
+
+.tpl-cls-song {
+  --pv-theme: #000000;
+}
+.tpl-cls-song .pv-module-title {
+  letter-spacing: 0.15em;
+}
+
+.tpl-cls-center {
+  --pv-theme: #000000;
+}
+.tpl-cls-center .pv-module-title {
+  font-size: 1.15em;
+}
+
+.tpl-cls-ink {
+  --pv-theme: #222222;
+}
+.tpl-cls-ink .pv-module-title {
+  padding: 4px 12px;
+  letter-spacing: 0.2em;
+}
+
+.tpl-cls-serif {
+  --pv-theme: #1f3a5f;
+}
+.tpl-cls-serif .pv-module-title::before,
+.tpl-cls-serif .pv-module-title::after {
+  max-width: 120px;
+}
+
+/* ---------- 参考样式新增：顶部色条 / 页面描边 / 竖线分隔联系方式 ---------- */
+
+/* 顶部色条：用背景渐变实现，不挤压内容高度；
+   限定仅绘制在 .pv-page 上（模板类名同时挂在内容容器上，避免重复出条） */
+.pv-page.tpl-cls-frame-red,
+.pv-page.tpl-cls-topline-blue,
+.pv-page.tpl-cls-topline-red {
+  background-image: linear-gradient(to bottom, var(--pv-theme), var(--pv-theme));
+  background-size: 100% 2.8mm;
+  background-repeat: no-repeat;
+}
+
+/* 主题色（简历页面不描边框） */
+.tpl-cls-frame-red {
+  --pv-theme: #b03a3a;
+}
+.tpl-cls-topline-blue {
+  --pv-theme: #2f6fd6;
+}
+.tpl-cls-topline-red {
+  --pv-theme: #b03a3a;
+}
+
+/* 左置模板：姓名加粗加大、联系方式用竖线分隔且不显示标签 */
+.tpl-cls-topline-blue .pv-profile-name,
+.tpl-cls-topline-red .pv-profile-name {
+  letter-spacing: 0.05em;
+}
+.tpl-cls-topline-blue .pv-contact-label,
+.tpl-cls-topline-red .pv-contact-label {
+  display: none;
+}
+.tpl-cls-topline-blue .pv-contact-item:not(:last-child)::after,
+.tpl-cls-topline-red .pv-contact-item:not(:last-child)::after {
+  content: '|';
+  margin: 0 0.5em;
+  color: #b6bcc4;
+}
+
+/* 蓝条左置：标题蓝色文字 + 灰色下划线 */
+.tpl-cls-topline-blue .pv-module-title {
+  border-bottom-color: #dfe4ea;
+}
+
+/* 蓝色竖条：居中姓名 + 蓝色竖条标题 */
+.tpl-cls-bar-blue {
+  --pv-theme: #2c6ec8;
+}
+.tpl-cls-bar-blue .pv-module-title {
+  border-left-width: 5px;
+}
+
+/* 红框/红条：竖条标题红色加粗 */
+.tpl-cls-frame-red .pv-module-title,
+.tpl-cls-topline-red .pv-module-title {
+  border-left-width: 5px;
+}

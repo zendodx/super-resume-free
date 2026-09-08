@@ -1,0 +1,49 @@
+/* ---------- 打印 / 导出 PDF ---------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  html,
+  body,
+  #app,
+  .app-shell,
+  .app-main {
+    height: auto !important;
+    background: #fff !important;
+  }
+  /* 隐藏应用界面，仅保留简历页面 */
+  body.printing .eh,
+  body.printing .ep,
+  body.printing .preview-toolbar,
+  body.printing .pv-measure {
+    display: none !important;
+  }
+  body.printing .app-main {
+    display: block !important;
+  }
+  body.printing .preview {
+    display: block !important;
+  }
+  body.printing .preview-scroll {
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+  body.printing .pv-zoom {
+    zoom: 1 !important;
+    display: block !important;
+  }
+  body.printing .pv-page {
+    box-shadow: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    width: 210mm !important;
+    min-height: 296mm !important;
+    break-after: page;
+    page-break-after: always;
+  }
+  body.printing .pv-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}

@@ -1,0 +1,27 @@
+/* 推荐分类模板专属样式 */
+
+.tpl-rec-classic {
+  --pv-theme: #000000;
+}
+
+.tpl-rec-blue {
+  --pv-theme: #2c6ec8;
+}
+.tpl-rec-blue .pv-module-title {
+  letter-spacing: 0.08em;
+}
+
+.tpl-rec-green {
+  --pv-theme: #1f7a5a;
+}
+.tpl-rec-green .pv-module-title {
+  border-left-width: 5px;
+}
+
+.tpl-rec-block {
+  --pv-theme: #2c6ec8;
+}
+.tpl-rec-block .pv-module-title {
+  padding: 4px 12px;
+  border-radius: 3px;
+}

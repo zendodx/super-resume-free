@@ -1,0 +1,228 @@
+/* =========================================================
+ * 简历预览基础样式 —— 模板变体与布局骨架
+ * 每个模板的专属样式见 templates/<category>/style.css（.tpl-* 类）
+ * ========================================================= */
+
+/* ---------- 模块标题风格变体 ---------- */
+.pv-module-title {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  color: var(--pv-theme);
+  padding-bottom: 3px;
+  margin-bottom: 6px;
+  font-size: 1.1em;
+  letter-spacing: 0.05em;
+}
+/* 下划线（默认） */
+.pv-ts-underline .pv-module-title {
+  border-bottom: 1.5px solid var(--pv-theme);
+}
+/* 色块反白 */
+.pv-ts-block .pv-module-title {
+  background: var(--pv-theme);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 2px;
+  align-self: flex-start;
+}
+/* 左侧竖色条 */
+.pv-ts-sidebar .pv-module-title {
+  border-left: 4px solid var(--pv-theme);
+  padding-left: 10px;
+}
+/* 仅加粗无装饰 */
+.pv-ts-plain .pv-module-title {
+  padding-bottom: 0;
+}
+/* 居中 + 两侧短线 */
+.pv-ts-center .pv-module-title {
+  justify-content: center;
+  gap: 12px;
+}
+.pv-ts-center .pv-module-title::before,
+.pv-ts-center .pv-module-title::after {
+  content: '';
+  flex: 1;
+  max-width: 90px;
+  border-top: 1.5px solid var(--pv-theme);
+}
+
+/* ---------- 个人信息头部风格变体 ---------- */
+.pv-profile {
+  padding-bottom: var(--pv-module-spacing);
+}
+.pv-profile-main {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pv-profile-info {
+  flex: 1;
+  min-width: 0;
+}
+.pv-profile-name {
+  font-weight: 700;
+  line-height: 1.3;
+}
+.pv-profile-intention {
+  margin-top: 4px;
+  font-weight: 500;
+}
+.pv-profile-contacts {
+  margin-top: 4px;
+  color: #4e5359;
+}
+.pv-contact-item {
+  display: inline-block;
+  margin-right: 1.2em;
+}
+.pv-profile-avatar {
+  width: 82px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* 居中式 */
+.pv-profile-center .pv-profile-main {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.pv-profile-center .pv-profile-name {
+  letter-spacing: 0.12em;
+}
+.pv-profile-center .pv-profile-avatar {
+  order: -1;
+  margin-bottom: 8px;
+}
+
+/* 姓名下色条式 */
+.pv-profile-nameBar .pv-profile-name {
+  display: inline-block;
+  border-bottom: 3px solid var(--pv-theme);
+  padding-bottom: 2px;
+}
+.pv-profile-nameBar .pv-profile-intention {
+  color: var(--pv-theme);
+}
+
+/* 顶部色带式（出血到页边） */
+.pv-profile-band {
+  margin: calc(-1 * var(--pv-margin-mm, 10mm)) calc(-1 * var(--pv-margin-mm, 10mm)) 0;
+  padding: calc(var(--pv-margin-mm, 10mm) * 0.7) var(--pv-margin-mm, 10mm)
+    calc(var(--pv-margin-mm, 10mm) * 0.7);
+  background: var(--pv-band-bg, var(--pv-theme));
+}
+.pv-profile-band .pv-profile-main {
+  align-items: center;
+}
+.pv-profile-band .pv-profile-name,
+.pv-profile-band .pv-profile-intention {
+  color: var(--pv-band-text, #fff);
+}
+.pv-profile-band .pv-profile-contacts {
+  color: var(--pv-band-sub, rgba(255, 255, 255, 0.82));
+}
+.pv-profile-band .pv-profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+/* 浅色横带式 */
+.pv-profile-banner {
+  margin: calc(-1 * var(--pv-margin-mm, 10mm)) calc(-1 * var(--pv-margin-mm, 10mm)) 0;
+  padding: calc(var(--pv-margin-mm, 10mm) * 0.7) var(--pv-margin-mm, 10mm)
+    calc(var(--pv-margin-mm, 10mm) * 0.7);
+  background: var(--pv-banner-bg, #eef2f6);
+}
+.pv-profile-banner .pv-profile-main {
+  align-items: center;
+}
+.pv-profile-banner .pv-profile-name {
+  color: var(--pv-theme);
+}
+.pv-profile-banner .pv-profile-contacts {
+  color: #4e5359;
+}
+.pv-profile-banner .pv-profile-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+}
+
+/* ---------- 双栏（左侧双色栏）布局 ---------- */
+.pv-page-sidebar {
+  padding: 0 !important;
+  display: flex;
+  align-items: stretch;
+}
+.pv-page-sidebar .pv-side-col {
+  width: 60mm;
+  flex-shrink: 0;
+  background: var(--pv-sidebar-bg, var(--pv-theme));
+  color: var(--pv-sidebar-text, #fff);
+  padding: var(--pv-margin-mm, 10mm) 8mm;
+  display: flex;
+  flex-direction: column;
+}
+.pv-page-sidebar .pv-main-col {
+  flex: 1;
+  min-width: 0;
+  padding: var(--pv-margin-mm, 10mm);
+}
+/* 侧栏内的个人信息：纵向堆叠 */
+.pv-side-col .pv-profile-main {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+.pv-side-col .pv-profile-name {
+  color: var(--pv-sidebar-text, #fff);
+}
+.pv-side-col .pv-profile-intention,
+.pv-side-col .pv-profile-contacts {
+  color: var(--pv-sidebar-sub, rgba(255, 255, 255, 0.82));
+}
+.pv-side-col .pv-profile-avatar {
+  order: -1;
+  width: 30mm;
+  height: 30mm;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.65);
+}
+/* 侧栏内模块文字反白 */
+.pv-side-col .pv-contact-item {
+  display: block;
+  margin-right: 0;
+  line-height: 1.9;
+}
+.pv-side-col .pv-module-title {
+  color: var(--pv-sidebar-text, #fff);
+  border-bottom-color: var(--pv-sidebar-text, #fff);
+}
+.pv-side-col .pv-block,
+.pv-side-col .pv-item-sub,
+.pv-side-col .pv-item-right,
+.pv-side-col .pv-flat,
+.pv-side-col .pv-line,
+.pv-side-col .pv-desc li,
+.pv-side-col .pv-item-main,
+.pv-side-col .pv-line-main {
+  color: var(--pv-sidebar-text, #fff);
+}
+
+/* ---------- 打印 ---------- */
+@media print {
+  .pv-profile-band,
+  .pv-profile-banner,
+  .pv-page-sidebar .pv-side-col {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
