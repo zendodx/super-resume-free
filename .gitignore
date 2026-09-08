@@ -2,3 +2,4 @@ node_modules
 dist
 /模版
 .idea
+.DS_Store
