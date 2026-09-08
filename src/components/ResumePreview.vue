@@ -4,6 +4,7 @@ import { useResumeStore } from '@/store/resume'
 import ResumeContent, { type PreviewBlock } from './ResumeContent.vue'
 import ResumePage from './ResumePage.vue'
 import { SIDEBAR_TYPES } from '@/templates/sample'
+import { buildBlocks } from '@/utils/blocks'
 
 const store = useResumeStore()
 const doc = store.doc
@@ -33,25 +34,7 @@ function setZoom(v: number | 'auto') {
 }
 
 // ---------- 构建分页块 ----------
-function toBlocks(): PreviewBlock[] {
-  const blocks: PreviewBlock[] = []
-  for (const m of store.visibleModules) {
-    const items = m.items.filter((it) => {
-      const hasField = Object.values(it.fields).some((v) => v && v.trim())
-      const hasDesc = it.desc.some((d) => d && d.trim())
-      return hasField || hasDesc
-    })
-    if (items.length === 0) continue
-    // 标题与第一条经历绑定为同一块，避免标题孤行
-    blocks.push({ key: m.id, module: m, items: [items[0]], showTitle: true })
-    for (let i = 1; i < items.length; i++) {
-      blocks.push({ key: `${m.id}-${i}`, module: m, items: [items[i]], showTitle: false })
-    }
-  }
-  return blocks
-}
-
-const allBlocks = computed<PreviewBlock[]>(toBlocks)
+const allBlocks = computed<PreviewBlock[]>(() => buildBlocks(doc.modules))
 
 /** 双栏布局：主栏 / 侧栏分块 */
 const sideBlocks = computed<PreviewBlock[]>(() =>

@@ -11,7 +11,11 @@ import {
 import SelectDropdown from './SelectDropdown.vue'
 import ColorPickerPopover from './ColorPickerPopover.vue'
 
-const emit = defineEmits<{ (e: 'openSort'): void; (e: 'openTemplate'): void }>()
+const emit = defineEmits<{
+  (e: 'openSort'): void
+  (e: 'openTemplate'): void
+  (e: 'back'): void
+}>()
 
 const store = useResumeStore()
 const layout = store.doc.layout
@@ -68,7 +72,7 @@ function commitName() {
 <template>
   <header class="eh">
     <div class="eh-left">
-      <button class="eh-back" type="button" title="返回我的简历">
+      <button class="eh-back" type="button" title="返回我的简历" @click="emit('back')">
         <Icon name="chevron-left" :size="22" />
         <span>我的简历</span>
       </button>

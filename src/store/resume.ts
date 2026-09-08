@@ -11,31 +11,14 @@ import type {
 import { createDefaultResume } from '@/data/defaultResume'
 import { MODULE_SCHEMAS, uid } from '@/data/constants'
 import { getTemplate } from '@/templates'
-
-const STORAGE_KEY = 'super-resume-free:doc'
-
-function loadDoc(): ResumeDoc {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) {
-      const parsed = JSON.parse(raw) as ResumeDoc
-      if (parsed && Array.isArray(parsed.modules) && parsed.layout) {
-        // 兼容旧数据：补默认模板字段
-        if (!parsed.templateId || !getTemplate(parsed.templateId)) parsed.templateId = 'rec-classic'
-        if (!parsed.titleStyle) parsed.titleStyle = 'underline'
-        if (!parsed.profileStyle) parsed.profileStyle = 'left'
-        if (!parsed.pageStyle) parsed.pageStyle = 'single'
-        return parsed
-      }
-    }
-  } catch {
-    /* ignore corrupted data */
-  }
-  return createDefaultResume()
-}
+import { useLibraryStore } from '@/store/library'
+import { cloneDoc } from '@/utils/doc'
 
 export const useResumeStore = defineStore('resume', () => {
-  const doc = reactive<ResumeDoc>(loadDoc())
+  const lib = useLibraryStore()
+  const doc = reactive<ResumeDoc>(
+    cloneDoc(lib.currentRecord?.doc ?? createDefaultResume()),
+  )
 
   /** UI 状态（不持久化） */
   const ui = reactive({
@@ -45,22 +28,62 @@ export const useResumeStore = defineStore('resume', () => {
     downloadSignal: 0,
   })
 
-  // ---------- 持久化 ----------
+  // ---------- 持久化（写回简历库中绑定的记录） ----------
   let saveTimer: ReturnType<typeof setTimeout> | null = null
+  let silentMutation = false // flushSave 自身写入 updatedAt 时抑制 watcher，避免无限保存循环
+  /** 编辑器当前绑定（正在编辑）的简历记录 id */
+  let boundId: string | null = lib.state.currentId
+
+  /** 立即将当前文档写回简历库绑定记录 */
+  function flushSave() {
+    if (saveTimer) {
+      clearTimeout(saveTimer)
+      saveTimer = null
+    }
+    if (!boundId) return
+    silentMutation = true
+    doc.updatedAt = Date.now()
+    lib.writeBack(boundId, doc)
+    ui.saveState = 'saved'
+  }
 
   watch(
     doc,
     () => {
+      if (silentMutation) {
+        silentMutation = false
+        return
+      }
       ui.saveState = 'saving'
       if (saveTimer) clearTimeout(saveTimer)
-      saveTimer = setTimeout(() => {
-        doc.updatedAt = Date.now()
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(doc))
-        ui.saveState = 'saved'
-      }, 600)
+      saveTimer = setTimeout(flushSave, 600)
     },
-    { deep: true },
+    { deep: true, flush: 'sync' },
   )
+
+  /** 打开另一份简历进行编辑 */
+  function openResume(id: string) {
+    flushSave()
+    lib.setCurrent(id)
+    boundId = id
+    const rec = lib.currentRecord
+    if (rec) Object.assign(doc, cloneDoc(rec.doc))
+    ui.collapsedModules.clear()
+  }
+
+  /** 新建空白简历并打开 */
+  function createAndOpen(patch?: Partial<ResumeDoc>) {
+    flushSave()
+    boundId = lib.createResume(patch)
+    const rec = lib.currentRecord
+    if (rec) Object.assign(doc, cloneDoc(rec.doc))
+    ui.collapsedModules.clear()
+  }
+
+  /** 库中修改名称时同步到编辑器绑定文档 */
+  function syncBoundName(name: string) {
+    if (name.trim()) doc.name = name.trim()
+  }
 
   // ---------- getters ----------
   const visibleModules = computed(() => doc.modules.filter((m) => !m.hidden))
@@ -223,9 +246,9 @@ export const useResumeStore = defineStore('resume', () => {
   const templateName = computed(() => getTemplate(doc.templateId)?.name ?? '')
 
   function resetResume() {
-    localStorage.removeItem(STORAGE_KEY)
     const fresh = createDefaultResume()
     Object.assign(doc, fresh)
+    flushSave()
   }
 
   function requestOnePage() {
@@ -264,6 +287,11 @@ export const useResumeStore = defineStore('resume', () => {
     updateLayout,
     applyTemplate,
     resetResume,
+    flushSave,
+    openResume,
+    createAndOpen,
+    syncBoundName,
+    getBoundId: () => boundId,
     requestOnePage,
     requestDownload,
   }
