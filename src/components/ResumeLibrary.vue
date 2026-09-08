@@ -4,7 +4,9 @@ import { useLibraryStore, type ResumeRecord } from '@/store/library'
 import { useResumeStore } from '@/store/resume'
 import { formatEditTime } from '@/utils/doc'
 import { downloadJson, dateStamp } from '@/utils/file'
+import { loadGistConfig, saveGistConfig } from '@/utils/github'
 import DocThumb from './DocThumb.vue'
+import GistSyncDialog from './GistSyncDialog.vue'
 
 const emit = defineEmits<{
   (e: 'open', id: string, opts?: { download?: boolean }): void
@@ -113,6 +115,22 @@ async function onImportFile(e: Event) {
   }
 }
 
+const lastSyncText = ref('')
+{
+  const c = loadGistConfig()
+  if (c.lastSyncAt) {
+    const d = new Date(c.lastSyncAt)
+    lastSyncText.value = `${c.lastSyncDir === 'down' ? '下载' : '同步'} ${d.getMonth() + 1}月${d.getDate()}日`
+  }
+}
+const gistDialogVisible = ref(false)
+
+function openGistDialog() {
+  const c = loadGistConfig()
+  saveGistConfig(c) // 保持不变，仅统一读写入口
+  gistDialogVisible.value = true
+}
+
 // ---------- 点击空白关闭菜单 ----------
 function onBodyClick() {
   closeMenu()
@@ -142,6 +160,10 @@ function onBodyClick() {
         </button>
       </nav>
       <div class="rl-actions">
+        <button class="btn rl-sync" type="button" @click="openGistDialog">
+          <Icon name="check-circle" :size="15" />
+          云同步<span v-if="lastSyncText" class="rl-sync-time">{{ lastSyncText }}</span>
+        </button>
         <button class="btn rl-export-all" type="button" @click="exportAll">
           <Icon name="save" :size="15" />
           导出全部
@@ -229,6 +251,8 @@ function onBodyClick() {
       </div>
     </div>
 
+    <GistSyncDialog v-if="gistDialogVisible" @close="gistDialogVisible = false" />
+
     <!-- 重命名弹窗 -->
     <div v-if="renaming" class="modal-mask" @click.self="renaming = null">
       <div class="modal" style="min-width: 360px">
@@ -310,6 +334,23 @@ function onBodyClick() {
 }
 .rl-import:hover {
   background: var(--brand-light);
+}
+.rl-sync {
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  background: #fff;
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+.rl-sync:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+}
+.rl-sync-time {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-left: 6px;
 }
 .rl-export-all {
   border: 1px solid var(--border);

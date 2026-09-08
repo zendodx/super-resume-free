@@ -174,6 +174,25 @@ export const useLibraryStore = defineStore('library', () => {
     return count
   }
 
+  /** 用备份整体替换本地简历库（云同步下载：以云端数据为准），返回记录数；失败返回 null */
+  function replaceWithBackup(data: unknown): number | null {
+    const bf = data as Partial<BackupFile>
+    if (bf?.type !== BACKUP_TYPE || !Array.isArray(bf.records)) return null
+    const next: ResumeRecord[] = []
+    for (const r of bf.records) {
+      if (!isValidDoc(r?.doc)) continue
+      next.push({
+        id: r.id || uid(),
+        doc: normalizeDoc(cloneDoc(r.doc)),
+        deletedAt: r.deletedAt ?? null,
+      })
+    }
+    if (!next.length) return null
+    records.splice(0, records.length, ...next)
+    state.currentId = next.find((r) => !r.deletedAt)?.id ?? next[0].id
+    return next.length
+  }
+
   /** 生成整包备份数据（用于导出全部） */
   function exportBackup(): BackupFile {
     return {
@@ -210,6 +229,7 @@ export const useLibraryStore = defineStore('library', () => {
     destroyResume,
     importResume,
     importBackup,
+    replaceWithBackup,
     exportBackup,
     writeBack,
     setCurrent,
