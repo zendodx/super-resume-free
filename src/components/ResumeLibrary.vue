@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { useLibraryStore, type ResumeRecord } from '@/store/library'
 import { useResumeStore } from '@/store/resume'
 import { formatEditTime } from '@/utils/doc'
+import { downloadJson, dateStamp } from '@/utils/file'
 import DocThumb from './DocThumb.vue'
 
 const emit = defineEmits<{
@@ -38,6 +39,12 @@ function actDuplicate(id: string) {
 function actDownload(rec: ResumeRecord) {
   closeMenu()
   emit('open', rec.id, { download: true })
+}
+
+/** 导出单个简历为 JSON */
+function actExport(rec: ResumeRecord) {
+  closeMenu()
+  downloadJson(`${rec.doc.name || '简历'}-${dateStamp()}.json`, rec.doc)
 }
 
 function actRename(rec: ResumeRecord) {
@@ -80,16 +87,27 @@ function triggerImport() {
   fileInput.value?.click()
 }
 
+/** 导出全部简历（含回收站）为备份包 */
+function exportAll() {
+  if (lib.activeRecords.length === 0 && lib.trashRecords.length === 0) {
+    window.alert('暂无简历可导出')
+    return
+  }
+  downloadJson(`简历备份-${dateStamp()}.json`, lib.exportBackup())
+}
+
 async function onImportFile(e: Event) {
   const input = e.target as HTMLInputElement
   const file = input.files?.[0]
   input.value = ''
   if (!file) return
   try {
-    const text = await file.text()
-    const id = lib.importResume(JSON.parse(text))
-    if (id) tab.value = 'mine'
-    else window.alert('导入失败：文件不是有效的简历 JSON')
+    const data = JSON.parse(await file.text())
+    // 优先识别整包备份，其次单份简历
+    const backupCount = lib.importBackup(data)
+    if (backupCount > 0) return
+    const id = lib.importResume(data)
+    if (!id) window.alert('导入失败：文件不是有效的简历或备份 JSON')
   } catch {
     window.alert('导入失败：文件解析出错')
   }
@@ -124,6 +142,10 @@ function onBodyClick() {
         </button>
       </nav>
       <div class="rl-actions">
+        <button class="btn rl-export-all" type="button" @click="exportAll">
+          <Icon name="save" :size="15" />
+          导出全部
+        </button>
         <button class="btn rl-import" type="button" @click="triggerImport">
           <Icon name="upload" :size="15" />
           导入简历
@@ -173,6 +195,10 @@ function onBodyClick() {
               <button class="rl-menu-item" type="button" @click="actDownload(rec)">
                 <Icon name="download" :size="16" />
                 下载简历
+              </button>
+              <button class="rl-menu-item" type="button" @click="actExport(rec)">
+                <Icon name="save" :size="16" />
+                导出简历
               </button>
               <button class="rl-menu-item" type="button" @click="actRename(rec)">
                 <Icon name="edit" :size="16" />
@@ -284,6 +310,18 @@ function onBodyClick() {
 }
 .rl-import:hover {
   background: var(--brand-light);
+}
+.rl-export-all {
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+  background: #fff;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+}
+.rl-export-all:hover {
+  color: var(--brand);
+  border-color: var(--brand);
 }
 .rl-create {
   height: 36px;

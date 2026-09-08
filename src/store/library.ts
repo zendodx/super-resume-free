@@ -16,6 +16,17 @@ export interface ResumeRecord {
 const LIB_KEY = 'super-resume-free:library'
 const LEGACY_KEY = 'super-resume-free:doc'
 
+/** 整包备份文件标识 */
+const BACKUP_TYPE = 'super-resume-free/backup'
+
+/** 整包备份文件格式 */
+interface BackupFile {
+  type: typeof BACKUP_TYPE
+  version: number
+  exportedAt: number
+  records: ResumeRecord[]
+}
+
 function loadLibrary(): { records: ResumeRecord[]; currentId: string | null } {
   try {
     // 1. 新格式
@@ -143,6 +154,36 @@ export const useLibraryStore = defineStore('library', () => {
     return createResume(doc, false)
   }
 
+  /** 整包导入（每份简历重新分配 id，避免覆盖现有数据），返回导入数量 */
+  function importBackup(data: unknown): number {
+    const bf = data as Partial<BackupFile>
+    if (bf?.type !== BACKUP_TYPE || !Array.isArray(bf.records)) return 0
+    let count = 0
+    for (const r of bf.records) {
+      if (!isValidDoc(r?.doc)) continue
+      records.push({
+        id: uid(),
+        doc: normalizeDoc(cloneDoc(r.doc)),
+        deletedAt: r.deletedAt ?? null,
+      })
+      count++
+    }
+    if (!state.currentId) {
+      state.currentId = records.find((r) => !r.deletedAt)?.id ?? null
+    }
+    return count
+  }
+
+  /** 生成整包备份数据（用于导出全部） */
+  function exportBackup(): BackupFile {
+    return {
+      type: BACKUP_TYPE,
+      version: 1,
+      exportedAt: Date.now(),
+      records: JSON.parse(JSON.stringify(records)) as ResumeRecord[],
+    }
+  }
+
   /** 将内容写回指定记录（编辑器保存时调用，id 为编辑器绑定的记录） */
   function writeBack(id: string, doc: ResumeDoc) {
     const rec = getRecord(id)
@@ -168,6 +209,8 @@ export const useLibraryStore = defineStore('library', () => {
     restoreResume,
     destroyResume,
     importResume,
+    importBackup,
+    exportBackup,
     writeBack,
     setCurrent,
   }
