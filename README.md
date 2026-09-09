@@ -36,8 +36,8 @@
 ## 使用指南
 
 ### 本地使用
-
-打开 release/index.html 即可使用
+克隆仓库：git clone https://github.com/zendodx/super-resume-free.git
+进入super-resume-free文件夹，打开 release/index.html 即可使用
 
 ### 远程使用
 
