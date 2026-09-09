@@ -7,6 +7,7 @@ import { downloadJson, dateStamp } from '@/utils/file'
 import { loadGistConfig, saveGistConfig } from '@/utils/github'
 import DocThumb from './DocThumb.vue'
 import GistSyncDialog from './GistSyncDialog.vue'
+import JsonTextDialog from './JsonTextDialog.vue'
 
 const emit = defineEmits<{
   (e: 'open', id: string, opts?: { download?: boolean }): void
@@ -43,10 +44,16 @@ function actDownload(rec: ResumeRecord) {
   emit('open', rec.id, { download: true })
 }
 
-/** 导出单个简历为 JSON */
+/** 导出单个简历为 JSON 文件 */
 function actExport(rec: ResumeRecord) {
   closeMenu()
   downloadJson(`${rec.doc.name || '简历'}-${dateStamp()}.json`, rec.doc)
+}
+
+/** 复制单个简历 JSON 文本 */
+function actCopyJson(rec: ResumeRecord) {
+  closeMenu()
+  openExportText(`${rec.doc.name || '简历'}`, JSON.stringify(rec.doc, null, 2))
 }
 
 function actRename(rec: ResumeRecord) {
@@ -82,20 +89,25 @@ function actDestroy(id: string) {
   }
 }
 
-// ---------- 导入简历 ----------
+// ---------- 导入 / 导出 ----------
 const fileInput = ref<HTMLInputElement>()
 
-function triggerImport() {
+function importFromFile() {
+  closeMenus()
   fileInput.value?.click()
 }
 
-/** 导出全部简历（含回收站）为备份包 */
-function exportAll() {
-  if (lib.activeRecords.length === 0 && lib.trashRecords.length === 0) {
-    window.alert('暂无简历可导出')
-    return
-  }
-  downloadJson(`简历备份-${dateStamp()}.json`, lib.exportBackup())
+function importFromPaste() {
+  closeMenus()
+  jsonImportVisible.value = true
+}
+
+/** 解析导入数据（整包备份优先，其次单份简历），成功返回 true */
+function importJsonData(data: unknown): boolean {
+  const backupCount = lib.importBackup(data)
+  if (backupCount > 0) return true
+  const id = lib.importResume(data)
+  return Boolean(id)
 }
 
 async function onImportFile(e: Event) {
@@ -105,15 +117,89 @@ async function onImportFile(e: Event) {
   if (!file) return
   try {
     const data = JSON.parse(await file.text())
-    // 优先识别整包备份，其次单份简历
-    const backupCount = lib.importBackup(data)
-    if (backupCount > 0) return
-    const id = lib.importResume(data)
-    if (!id) window.alert('导入失败：文件不是有效的简历或备份 JSON')
+    if (importJsonData(data)) showToast('导入成功')
+    else window.alert('导入失败：文件不是有效的简历或备份 JSON')
   } catch {
     window.alert('导入失败：文件解析出错')
   }
 }
+
+function onImportPaste(text: string) {
+  let data: unknown
+  try {
+    data = JSON.parse(text)
+  } catch {
+    window.alert('导入失败：JSON 格式错误')
+    return
+  }
+  if (importJsonData(data)) {
+    jsonImportVisible.value = false
+    showToast('导入成功')
+  } else {
+    window.alert('导入失败：不是有效的简历或备份 JSON')
+  }
+}
+
+/** 导出全部简历（含回收站）为备份包 JSON 文件 */
+function exportAll() {
+  closeMenus()
+  if (lib.activeRecords.length === 0 && lib.trashRecords.length === 0) {
+    window.alert('暂无简历可导出')
+    return
+  }
+  downloadJson(`简历备份-${dateStamp()}.json`, lib.exportBackup())
+}
+
+/** 复制全部简历备份 JSON 文本 */
+function copyAll() {
+  closeMenus()
+  if (lib.activeRecords.length === 0 && lib.trashRecords.length === 0) {
+    window.alert('暂无简历可导出')
+    return
+  }
+  openExportText('全部简历备份', JSON.stringify(lib.exportBackup(), null, 2))
+}
+
+// ---------- JSON 文本弹窗与轻提示 ----------
+const jsonImportVisible = ref(false)
+const exportTextTitle = ref('')
+const exportText = ref('')
+const exportTextVisible = ref(false)
+
+function openExportText(title: string, json: string) {
+  exportTextTitle.value = title
+  exportText.value = json
+  exportTextVisible.value = true
+}
+
+const toastMsg = ref('')
+let toastTimer: number | undefined
+function showToast(msg: string) {
+  toastMsg.value = msg
+  window.clearTimeout(toastTimer)
+  toastTimer = window.setTimeout(() => {
+    toastMsg.value = ''
+  }, 2000)
+}
+
+// ---------- 顶部下拉 ----------
+const importMenuOpen = ref(false)
+const exportMenuOpen = ref(false)
+
+function toggleImportMenu() {
+  importMenuOpen.value = !importMenuOpen.value
+  exportMenuOpen.value = false
+}
+function toggleExportMenu() {
+  exportMenuOpen.value = !exportMenuOpen.value
+  importMenuOpen.value = false
+}
+function closeMenus() {
+  importMenuOpen.value = false
+  exportMenuOpen.value = false
+  closeMenu()
+}
+
 
 const lastSyncText = ref('')
 {
@@ -133,7 +219,7 @@ function openGistDialog() {
 
 // ---------- 点击空白关闭菜单 ----------
 function onBodyClick() {
-  closeMenu()
+  closeMenus()
 }
 </script>
 
@@ -164,14 +250,40 @@ function onBodyClick() {
           <Icon name="check-circle" :size="15" />
           云同步<span v-if="lastSyncText" class="rl-sync-time">{{ lastSyncText }}</span>
         </button>
-        <button class="btn rl-export-all" type="button" @click="exportAll">
-          <Icon name="save" :size="15" />
-          导出全部
-        </button>
-        <button class="btn rl-import" type="button" @click="triggerImport">
-          <Icon name="upload" :size="15" />
-          导入简历
-        </button>
+        <div class="rl-dd">
+          <button class="btn rl-export-all" type="button" @click.stop="toggleExportMenu">
+            <Icon name="save" :size="15" />
+            导出全部
+            <Icon name="chevron-down" :size="13" />
+          </button>
+          <div v-if="exportMenuOpen" class="rl-dd-menu">
+            <button class="rl-menu-item" type="button" @click="exportAll">
+              <Icon name="save" :size="16" />
+              导出为 JSON 文件
+            </button>
+            <button class="rl-menu-item" type="button" @click="copyAll">
+              <Icon name="copy" :size="16" />
+              复制全部 JSON
+            </button>
+          </div>
+        </div>
+        <div class="rl-dd">
+          <button class="btn rl-import" type="button" @click.stop="toggleImportMenu">
+            <Icon name="upload" :size="15" />
+            导入简历
+            <Icon name="chevron-down" :size="13" />
+          </button>
+          <div v-if="importMenuOpen" class="rl-dd-menu">
+            <button class="rl-menu-item" type="button" @click="importFromFile">
+              <Icon name="upload" :size="16" />
+              从 JSON 文件导入
+            </button>
+            <button class="rl-menu-item" type="button" @click="importFromPaste">
+              <Icon name="edit" :size="16" />
+              粘贴 JSON 导入
+            </button>
+          </div>
+        </div>
         <button class="btn btn-primary rl-create" type="button" @click="emit('create')">
           <Icon name="add" :size="15" />
           新建简历
@@ -222,6 +334,10 @@ function onBodyClick() {
                 <Icon name="save" :size="16" />
                 导出简历
               </button>
+              <button class="rl-menu-item" type="button" @click="actCopyJson(rec)">
+                <Icon name="copy" :size="16" />
+                复制 JSON
+              </button>
               <button class="rl-menu-item" type="button" @click="actRename(rec)">
                 <Icon name="edit" :size="16" />
                 修改名称
@@ -252,6 +368,30 @@ function onBodyClick() {
     </div>
 
     <GistSyncDialog v-if="gistDialogVisible" @close="gistDialogVisible = false" />
+
+    <JsonTextDialog
+      v-if="jsonImportVisible"
+      mode="import"
+      title="粘贴 JSON 导入"
+      @close="jsonImportVisible = false"
+      @import="onImportPaste"
+    />
+    <JsonTextDialog
+      v-if="exportTextVisible"
+      mode="export"
+      :title="`导出 JSON 文本 - ${exportTextTitle}`"
+      :text="exportText"
+      @close="exportTextVisible = false"
+      @copied="showToast('JSON 已复制到剪贴板')"
+    />
+
+    <!-- 轻提示 -->
+    <Transition name="toast-fade">
+      <div v-if="toastMsg" class="rl-toast">
+        <Icon name="check-circle" :size="16" />
+        {{ toastMsg }}
+      </div>
+    </Transition>
 
     <!-- 重命名弹窗 -->
     <div v-if="renaming" class="modal-mask" @click.self="renaming = null">
@@ -368,6 +508,63 @@ function onBodyClick() {
   height: 36px;
   padding: 0 16px;
   font-size: 14px;
+}
+
+/* ---------- 顶部下拉 ---------- */
+.rl-dd {
+  position: relative;
+}
+.rl-dd .btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.rl-dd .btn .icon:last-child {
+  color: var(--text-light);
+}
+.rl-dd-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 170px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+  padding: 6px;
+  z-index: 30;
+  animation: rlMenuIn 0.12s ease;
+}
+
+/* ---------- 轻提示 ---------- */
+.rl-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(17, 24, 39, 0.88);
+  color: #fff;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  z-index: 100;
+  pointer-events: none;
+}
+.rl-toast .icon {
+  color: #34d399;
+}
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-50%) translateY(8px);
 }
 
 /* ---------- 网格 ---------- */
