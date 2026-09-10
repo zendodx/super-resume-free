@@ -1,27 +1,18 @@
 /* 专业分类模板专属样式 */
+/* 约定：主题色不在模板 CSS 中锁定，默认色写在模板的 layout.themeColor，
+   渲染时以内联 --pv-theme 注入页面，用户可在工具栏随时修改。
+   深色色带 / 侧栏底色也回退跟随 --pv-theme（base.css 已提供 fallback） */
 
-.tpl-pro-navy {
-  --pv-theme: #1f3a5f;
-}
 .tpl-pro-navy .pv-module-title {
   font-size: 1.15em;
 }
 
-.tpl-pro-band {
-  --pv-theme: #2c6ec8;
-  --pv-band-bg: #2c6ec8;
-}
-
 .tpl-pro-sidebar-blue {
-  --pv-theme: #2c6ec8;
-  --pv-sidebar-bg: #2c6ec8;
   --pv-sidebar-text: #ffffff;
   --pv-sidebar-sub: rgba(255, 255, 255, 0.82);
 }
 
 .tpl-pro-sidebar-teal {
-  --pv-theme: #0e7490;
-  --pv-sidebar-bg: #155e75;
   --pv-sidebar-text: #ffffff;
   --pv-sidebar-sub: rgba(255, 255, 255, 0.8);
 }
@@ -31,8 +22,8 @@
 
 /* ========== 深色卡片：深色头部色带 + 圆形头像叠压 + 圆角内容卡片 ========== */
 /* 选择器带 .pv-content 前缀以提升优先级；间距一律用 padding（计入分页高度测量） */
+/* 主题色不在此处锁定：默认色由 layout.themeColor（inline）提供，用户可在工具栏随时修改 */
 .pv-content.tpl-pro-dark {
-  --pv-theme: #2f5fd0;
   --pv-card-line: #dfe3ea;
 }
 /* 头部：深色色带出血到页边上缘，圆形头像骑跨色带下缘 */
@@ -120,9 +111,7 @@
 }
 
 /* ========== 蓝色波浪：蓝色弧形头部色带 + 标题居中下划线 ========== */
-.pv-content.tpl-pro-wave {
-  --pv-theme: #3e86f5;
-}
+/* 波浪色带跟随主题色 */
 .pv-content.tpl-pro-wave .pv-profile {
   position: relative;
   padding-top: 0;
@@ -134,7 +123,7 @@
   left: calc(-1 * var(--pv-margin-mm, 10mm));
   right: calc(-1 * var(--pv-margin-mm, 10mm));
   height: 42px;
-  background: #3e86f5;
+  background: var(--pv-theme);
   border-radius: 0 0 50% 50% / 0 0 20px 20px;
 }
 .pv-content.tpl-pro-wave .pv-profile-main {

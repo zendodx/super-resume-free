@@ -1,27 +1,21 @@
 /* 简约分类模板专属样式 */
+/* 约定：主题色不在模板 CSS 中锁定，默认色写在模板的 layout.themeColor，
+   渲染时以内联 --pv-theme 注入页面，用户可在工具栏随时修改 */
 
-.tpl-min-plain {
-  --pv-theme: #000000;
-}
 .tpl-min-plain .pv-module-title {
   font-size: 1.15em;
   letter-spacing: 0.1em;
 }
 
-.tpl-min-compact {
-  --pv-theme: #000000;
-}
-
 .tpl-min-banner {
-  --pv-theme: #475569;
   --pv-banner-bg: #edf1f6;
 }
 
 /* ---------- 表格边框：每个模块渲染为一张带边框的表格 ---------- */
 /* 选择器带 .pv-content 前缀以提升优先级，覆盖组件内联的默认间距 */
 /* 注意：间距必须用 padding（计入高度测量供分页判断），不可用 margin */
+/* 主题色不在此处锁定：默认色由 layout.themeColor（inline）提供，用户可在工具栏随时修改 */
 .pv-content.tpl-min-table {
-  --pv-theme: #2f3338;
   --pv-table-line: #d9dce0;
 }
 /* 个人信息区：外间距 padding + 内表格框（::before 模拟） */
@@ -115,9 +109,6 @@
   }
 }
 
-.tpl-min-air {
-  --pv-theme: #22262b;
-}
 .tpl-min-air .pv-module-title {
   font-size: 1.2em;
   letter-spacing: 0.2em;

@@ -60,7 +60,7 @@ export const minimalTemplates: ResumeTemplate[] = [
     category: 'minimal',
     desc: '大间距大留白，阅读体验优先',
     className: 'tpl-min-air',
-    layout: makeLayout({ moduleSpacing: 18, itemSpacing: 10, pageMargin: 14, lineHeight: 1.7 }),
+    layout: makeLayout({ themeColor: '#22262b', moduleSpacing: 18, itemSpacing: 10, pageMargin: 14, lineHeight: 1.7 }),
     titleStyle: 'plain',
     profileStyle: 'center',
     pageStyle: 'single',

@@ -1,26 +1,15 @@
 /* 推荐分类模板专属样式 */
+/* 约定：主题色不在模板 CSS 中锁定，默认色写在模板的 layout.themeColor，
+   渲染时以内联 --pv-theme 注入页面，用户可在工具栏随时修改 */
 
-.tpl-rec-classic {
-  --pv-theme: #000000;
-}
-
-.tpl-rec-blue {
-  --pv-theme: #2c6ec8;
-}
 .tpl-rec-blue .pv-module-title {
   letter-spacing: 0.08em;
 }
 
-.tpl-rec-green {
-  --pv-theme: #1f7a5a;
-}
 .tpl-rec-green .pv-module-title {
   border-left-width: 5px;
 }
 
-.tpl-rec-block {
-  --pv-theme: #2c6ec8;
-}
 .tpl-rec-block .pv-module-title {
   padding: 4px 12px;
   border-radius: 3px;
