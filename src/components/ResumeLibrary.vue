@@ -5,6 +5,7 @@ import { useResumeStore } from '@/store/resume'
 import { formatEditTime } from '@/utils/doc'
 import { downloadJson, dateStamp } from '@/utils/file'
 import { loadGistConfig, saveGistConfig } from '@/utils/github'
+import pkg from '../../package.json'
 import DocThumb from './DocThumb.vue'
 import GistSyncDialog from './GistSyncDialog.vue'
 import JsonTextDialog from './JsonTextDialog.vue'
@@ -295,6 +296,18 @@ function onBodyClick() {
           style="display: none"
           @change="onImportFile"
         />
+        <!-- GitHub 跳转图标、工具名称、版本 -->
+        <a
+          class="rl-repo"
+          href="https://github.com/zendodx/super-resume-free"
+          target="_blank"
+          rel="noopener"
+          title="GitHub 仓库"
+        >
+          <Icon name="github" :size="16" />
+          <span class="rl-repo-name">Super Resume Free</span>
+          <span class="rl-repo-ver">v{{ pkg.version }}</span>
+        </a>
       </div>
     </header>
 
@@ -462,7 +475,32 @@ function onBodyClick() {
 }
 .rl-actions {
   display: flex;
+  align-items: center;
   gap: 12px;
+}
+.rl-repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--text-sub);
+  font-size: 14px;
+  transition: all 0.15s;
+}
+.rl-repo:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+}
+.rl-repo .icon {
+  fill: currentColor;
+}
+.rl-repo-ver {
+  font-size: 12px;
+  color: var(--text-light);
 }
 .rl-import {
   border: 1px solid var(--brand);
