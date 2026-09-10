@@ -10,16 +10,6 @@
   font-size: 1.15em;
 }
 
-.tpl-cls-ink .pv-module-title {
-  padding: 4px 12px;
-  letter-spacing: 0.2em;
-}
-
-.tpl-cls-serif .pv-module-title::before,
-.tpl-cls-serif .pv-module-title::after {
-  max-width: 120px;
-}
-
 /* ---------- 顶部色条 / 竖线分隔联系方式 ---------- */
 
 /* 顶部色条：用背景渐变实现，不挤压内容高度；

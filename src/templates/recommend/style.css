@@ -2,10 +2,6 @@
 /* 约定：主题色不在模板 CSS 中锁定，默认色写在模板的 layout.themeColor，
    渲染时以内联 --pv-theme 注入页面，用户可在工具栏随时修改 */
 
-.tpl-rec-blue .pv-module-title {
-  letter-spacing: 0.08em;
-}
-
 .tpl-rec-green .pv-module-title {
   border-left-width: 5px;
 }

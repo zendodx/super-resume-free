@@ -23,6 +23,15 @@ export const TEMPLATE_CATEGORIES: { key: 'all' | ResumeTemplate['category'] | 'c
   { key: 'custom', label: '自定义' },
 ]
 
+/** 已下线模板的别名映射：旧简历引用的 templateId 回落到同构的保留模板 */
+const TEMPLATE_ALIASES: Record<string, string> = {
+  'rec-blue': 'rec-classic', // 商务蓝 → 经典黑（同构，主题色已可修改）
+  'pro-sidebar-teal': 'pro-sidebar-blue', // 青色侧栏 → 蓝色侧栏
+  'pro-navy': 'rec-green', // 沉稳藏青 → 活力绿（同构竖条标题左置）
+  'cls-ink': 'rec-block', // 墨色古风 → 色块标题（同构色块标题 + 姓名色条）
+  'cls-serif': 'cls-center', // 衬线蓝调 → 居中典雅（同构居中标题头部）
+}
+
 export function getTemplate(id: string): ResumeTemplate | undefined {
-  return TEMPLATES.find((t) => t.id === id)
+  return TEMPLATES.find((t) => t.id === id) ?? TEMPLATES.find((t) => t.id === TEMPLATE_ALIASES[id])
 }

@@ -3,21 +3,9 @@
    渲染时以内联 --pv-theme 注入页面，用户可在工具栏随时修改。
    深色色带 / 侧栏底色也回退跟随 --pv-theme（base.css 已提供 fallback） */
 
-.tpl-pro-navy .pv-module-title {
-  font-size: 1.15em;
-}
-
 .tpl-pro-sidebar-blue {
   --pv-sidebar-text: #ffffff;
   --pv-sidebar-sub: rgba(255, 255, 255, 0.82);
-}
-
-.tpl-pro-sidebar-teal {
-  --pv-sidebar-text: #ffffff;
-  --pv-sidebar-sub: rgba(255, 255, 255, 0.8);
-}
-.tpl-pro-sidebar-teal .pv-module-title {
-  border-bottom-style: dashed;
 }
 
 /* ========== 深色卡片：深色头部色带 + 圆形头像叠压 + 圆角内容卡片 ========== */
