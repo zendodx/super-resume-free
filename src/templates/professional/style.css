@@ -251,12 +251,60 @@
   border-bottom: 1px solid #cfd6de;
 }
 
+/* ========== 绯红横幅：照片居左通栏横幅 + 浅粉标题条 ========== */
+/* 横幅底色跟随主题色（base.css 的 band fallback），文字取主题色深调 */
+.tpl-pro-crimson .pv-profile-band {
+  border-radius: 0 0 0 36px;
+}
+/* 照片居左、文字紧邻其右 */
+.tpl-pro-crimson .pv-profile-band .pv-profile-main {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 26px;
+}
+.tpl-pro-crimson .pv-profile-band .pv-profile-avatar {
+  width: 26mm;
+  height: 34mm;
+  border-radius: 3px;
+  border: 3px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.tpl-pro-crimson .pv-profile-band .pv-profile-name,
+.tpl-pro-crimson .pv-profile-band .pv-profile-intention {
+  color: color-mix(in srgb, var(--pv-theme) 62%, #000);
+}
+.tpl-pro-crimson .pv-profile-band .pv-profile-contacts {
+  color: color-mix(in srgb, var(--pv-theme) 68%, #2a2430);
+}
+/* 模块标题：浅粉通栏色条 + 左侧竖条 */
+.tpl-pro-crimson .pv-title-block .pv-module-title {
+  background: color-mix(in srgb, var(--pv-theme) 9%, #fff);
+  border-left: 4px solid var(--pv-theme);
+  color: var(--pv-theme);
+  padding: 5px 12px;
+  border-radius: 2px 10px 10px 2px;
+  margin-bottom: 10px;
+  font-size: 1.08em;
+  letter-spacing: 0.06em;
+}
+/* 条目头部两行：公司一行、职位一行，时间在右上 */
+.tpl-pro-crimson .pv-item-head {
+  align-items: flex-start;
+}
+.tpl-pro-crimson .pv-item-head-left {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
 /* 打印时强制输出色带底色 */
 @media print {
   .pv-content.tpl-pro-dark .pv-profile::before,
   .pv-content.tpl-pro-wave .pv-profile::before,
   .pv-content.tpl-pro-icon .pv-title-block .pv-module-title::before,
-  .tpl-pro-rail .pv-module-title-text {
+  .tpl-pro-rail .pv-module-title-text,
+  .tpl-pro-crimson .pv-title-block .pv-module-title {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }

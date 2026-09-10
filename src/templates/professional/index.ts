@@ -38,6 +38,17 @@ export const professionalTemplates: ResumeTemplate[] = [
     pageStyle: 'single',
   },
   {
+    id: 'pro-crimson-band',
+    name: '绯红横幅',
+    category: 'professional',
+    desc: '照片居左通栏横幅，浅粉色标题条',
+    className: 'tpl-pro-crimson',
+    layout: makeLayout({ themeColor: '#c72c41', moduleSpacing: 12 }),
+    titleStyle: 'plain',
+    profileStyle: 'band',
+    pageStyle: 'single',
+  },
+  {
     id: 'pro-rail-right',
     name: '右侧栏',
     category: 'professional',
@@ -70,5 +81,5 @@ export const professionalTemplates: ResumeTemplate[] = [
     titleStyle: 'plain',
     profileStyle: 'center',
     pageStyle: 'single',
-  }
+  },
 ]
