@@ -5,17 +5,6 @@ import './style.css'
 /** 专业分类模板 */
 export const professionalTemplates: ResumeTemplate[] = [
   {
-    id: 'pro-navy',
-    name: '沉稳藏青',
-    category: 'professional',
-    desc: '藏青竖条标题，金融/咨询首选',
-    className: 'tpl-pro-navy',
-    layout: makeLayout({ themeColor: '#1f3a5f', moduleSpacing: 12 }),
-    titleStyle: 'sidebar',
-    profileStyle: 'left',
-    pageStyle: 'single',
-  },
-  {
     id: 'pro-band',
     name: '顶部蓝带',
     category: 'professional',
@@ -24,6 +13,17 @@ export const professionalTemplates: ResumeTemplate[] = [
     layout: makeLayout({ themeColor: '#2c6ec8' }),
     titleStyle: 'underline',
     profileStyle: 'band',
+    pageStyle: 'single',
+  },
+  {
+    id: 'pro-navy',
+    name: '沉稳藏青',
+    category: 'professional',
+    desc: '藏青竖条标题，金融/咨询首选',
+    className: 'tpl-pro-navy',
+    layout: makeLayout({ themeColor: '#1f3a5f', moduleSpacing: 12 }),
+    titleStyle: 'sidebar',
+    profileStyle: 'left',
     pageStyle: 'single',
   },
   {
@@ -48,4 +48,26 @@ export const professionalTemplates: ResumeTemplate[] = [
     profileStyle: 'left',
     pageStyle: 'sidebar-left',
   },
+  {
+    id: 'pro-dark-card',
+    name: '深色卡片',
+    category: 'professional',
+    desc: '深色头部色带 + 圆形头像，内容圆角卡片分区',
+    className: 'tpl-pro-dark',
+    layout: makeLayout({ themeColor: '#2f5fd0', moduleSpacing: 10 }),
+    titleStyle: 'plain',
+    profileStyle: 'center',
+    pageStyle: 'single',
+  },
+  {
+    id: 'pro-blue-wave',
+    name: '蓝色波浪',
+    category: 'professional',
+    desc: '蓝色波浪头部，标题居中加下划线',
+    className: 'tpl-pro-wave',
+    layout: makeLayout({ themeColor: '#3e86f5' }),
+    titleStyle: 'plain',
+    profileStyle: 'center',
+    pageStyle: 'single',
+  }
 ]

@@ -44,6 +44,17 @@ export const minimalTemplates: ResumeTemplate[] = [
     pageStyle: 'single',
   },
   {
+    id: 'min-table',
+    name: '表格边框',
+    category: 'minimal',
+    desc: '表格式边框分区，模块信息一目了然',
+    className: 'tpl-min-table',
+    layout: makeLayout({ themeColor: '#2f3338', moduleSpacing: 12, itemSpacing: 8 }),
+    titleStyle: 'plain',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
+  {
     id: 'min-air',
     name: '留白呼吸',
     category: 'minimal',

@@ -28,3 +28,146 @@
 .tpl-pro-sidebar-teal .pv-module-title {
   border-bottom-style: dashed;
 }
+
+/* ========== 深色卡片：深色头部色带 + 圆形头像叠压 + 圆角内容卡片 ========== */
+/* 选择器带 .pv-content 前缀以提升优先级；间距一律用 padding（计入分页高度测量） */
+.pv-content.tpl-pro-dark {
+  --pv-theme: #2f5fd0;
+  --pv-card-line: #dfe3ea;
+}
+/* 头部：深色色带出血到页边上缘，圆形头像骑跨色带下缘 */
+.pv-content.tpl-pro-dark .pv-profile {
+  position: relative;
+  padding-top: 0;
+}
+.pv-content.tpl-pro-dark .pv-profile::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--pv-margin-mm, 10mm));
+  left: calc(-1 * var(--pv-margin-mm, 10mm));
+  right: calc(-1 * var(--pv-margin-mm, 10mm));
+  height: 36px;
+  background: #232a3a;
+}
+.pv-content.tpl-pro-dark .pv-profile-main {
+  position: relative;
+  z-index: 1;
+}
+.pv-content.tpl-pro-dark .pv-profile-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+  object-fit: cover;
+}
+.pv-content.tpl-pro-dark .pv-profile-name {
+  color: #1f2533;
+  letter-spacing: 0.06em;
+}
+/* 模块标题抽出到卡片外部（绝对定位，块顶部预留标题位） */
+.pv-content.tpl-pro-dark .pv-title-block {
+  position: relative;
+  padding-top: calc(var(--pv-module-spacing) + 30px);
+}
+.pv-content.tpl-pro-dark .pv-title-block .pv-module-title {
+  position: absolute;
+  top: var(--pv-module-spacing);
+  left: 2px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  font-size: 1.2em;
+  letter-spacing: 0.04em;
+}
+.pv-content.tpl-pro-dark .pv-title-block.pv-first {
+  padding-top: 30px;
+}
+.pv-content.tpl-pro-dark .pv-title-block.pv-first .pv-module-title {
+  top: 0;
+}
+/* 卡片：用 ::before 画圆角边框（避开标题所在的预留区） */
+.pv-content.tpl-pro-dark .pv-block {
+  position: relative;
+  padding-bottom: 12px;
+}
+.pv-content.tpl-pro-dark .pv-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--pv-card-line);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.pv-content.tpl-pro-dark .pv-title-block::before {
+  top: calc(var(--pv-module-spacing) + 30px);
+}
+.pv-content.tpl-pro-dark .pv-title-block.pv-first::before {
+  top: 30px;
+}
+/* 卡片内条目留出内边距 */
+.pv-content.tpl-pro-dark .pv-item,
+.pv-content.tpl-pro-dark .pv-line,
+.pv-content.tpl-pro-dark .pv-flat {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+.pv-content.tpl-pro-dark .pv-module-title + div {
+  margin-top: 0;
+  padding-top: 12px;
+}
+.pv-content.tpl-pro-dark .pv-block:not(.pv-title-block) {
+  padding-top: 12px;
+}
+
+/* ========== 蓝色波浪：蓝色弧形头部色带 + 标题居中下划线 ========== */
+.pv-content.tpl-pro-wave {
+  --pv-theme: #3e86f5;
+}
+.pv-content.tpl-pro-wave .pv-profile {
+  position: relative;
+  padding-top: 0;
+}
+.pv-content.tpl-pro-wave .pv-profile::before {
+  content: '';
+  position: absolute;
+  top: calc(-1 * var(--pv-margin-mm, 10mm));
+  left: calc(-1 * var(--pv-margin-mm, 10mm));
+  right: calc(-1 * var(--pv-margin-mm, 10mm));
+  height: 42px;
+  background: #3e86f5;
+  border-radius: 0 0 50% 50% / 0 0 20px 20px;
+}
+.pv-content.tpl-pro-wave .pv-profile-main {
+  position: relative;
+  z-index: 1;
+}
+.pv-content.tpl-pro-wave .pv-profile-avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  object-fit: cover;
+}
+.pv-content.tpl-pro-wave .pv-profile-name {
+  color: #1f2533;
+  letter-spacing: 0.06em;
+}
+/* 标题居中 + 通栏蓝色下划线 */
+.pv-content.tpl-pro-wave .pv-module-title {
+  justify-content: center;
+  color: var(--pv-theme);
+  border-bottom: 1.5px solid var(--pv-theme);
+  padding-bottom: 4px;
+  font-size: 1.12em;
+  letter-spacing: 0.12em;
+}
+
+/* 打印时强制输出色带底色 */
+@media print {
+  .pv-content.tpl-pro-dark .pv-profile::before,
+  .pv-content.tpl-pro-wave .pv-profile::before {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
