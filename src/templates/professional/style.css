@@ -140,10 +140,74 @@
   letter-spacing: 0.12em;
 }
 
+/* ========== 图标标题：模块标题前置主题色圆形图标 ========== */
+/* 标题：图标 + 主题色文字 + 通栏浅色分割线 */
+.pv-content.tpl-pro-icon .pv-module-title {
+  gap: 8px;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e4e8ef;
+  font-size: 1.08em;
+  letter-spacing: 0.05em;
+}
+/* 图标圆底：跟随主题色，白色图标通过 background-image 按模块类型切换 */
+.pv-content.tpl-pro-icon .pv-title-block .pv-module-title::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--pv-theme);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+}
+/* 个人总结：人形 */
+.pv-content.tpl-pro-icon .pv-block[data-type='personal_summary'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.42 0-8 1.79-8 4v2h16v-2c0-2.21-3.58-4-8-4z'/%3E%3C/svg%3E");
+}
+/* 教育经历：学士帽 */
+.pv-content.tpl-pro-icon .pv-block[data-type='educations'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 3 1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18V17c0 1.66 3.13 3 7 3s7-1.34 7-3v-1.18l-7 3.82-7-3.82z'/%3E%3C/svg%3E");
+}
+/* 工作经历：公文包 */
+.pv-content.tpl-pro-icon .pv-block[data-type='works'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20 6h-4V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2zm-10-2h4v2h-4V4z'/%3E%3C/svg%3E");
+}
+/* 实习经历：时钟 */
+.pv-content.tpl-pro-icon .pv-block[data-type='internships'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z'/%3E%3C/svg%3E");
+}
+/* 项目经历：灯泡 */
+.pv-content.tpl-pro-icon .pv-block[data-type='projects'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1zm3-19a7 7 0 0 0-4 12.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2z'/%3E%3C/svg%3E");
+}
+/* 社团和组织：人群 */
+.pv-content.tpl-pro-icon .pv-block[data-type='orgs'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm-8 0a3 3 0 1 0-3-3 3 3 0 0 0 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h9v-2.5c0-.85.36-1.62.97-2.28A12.6 12.6 0 0 0 8 13zm8 0c-.29 0-.62.02-.97.05A4.22 4.22 0 0 1 17 16.5V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z'/%3E%3C/svg%3E");
+}
+/* 技能：星星 */
+.pv-content.tpl-pro-icon .pv-block[data-type='skills'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E");
+}
+/* 荣誉奖项：奖杯 */
+.pv-content.tpl-pro-icon .pv-block[data-type='awards'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M19 5h-2V3H7v2H5a2 2 0 0 0-2 2v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0 0 11 15.9V19H7v2h10v-2h-4v-3.1a5.01 5.01 0 0 0 3.61-2.96C19.08 12.63 21 10.55 21 8V7a2 2 0 0 0-2-2z'/%3E%3C/svg%3E");
+}
+/* 资格证书：盾牌对勾 */
+.pv-content.tpl-pro-icon .pv-block[data-type='certificates'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z'/%3E%3C/svg%3E");
+}
+/* 自定义模块：标签 */
+.pv-content.tpl-pro-icon .pv-block[data-type='custom'] .pv-module-title::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M21.41 11.58l-9-9A2 2 0 0 0 11 2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .59 1.42l9 9a2 2 0 0 0 2.82 0l7-7a2 2 0 0 0 0-2.84zM6.5 8A1.5 1.5 0 1 1 8 6.5 1.5 1.5 0 0 1 6.5 8z'/%3E%3C/svg%3E");
+}
+
 /* 打印时强制输出色带底色 */
 @media print {
   .pv-content.tpl-pro-dark .pv-profile::before,
-  .pv-content.tpl-pro-wave .pv-profile::before {
+  .pv-content.tpl-pro-wave .pv-profile::before,
+  .pv-content.tpl-pro-icon .pv-title-block .pv-module-title::before {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }

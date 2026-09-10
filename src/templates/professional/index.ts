@@ -38,6 +38,17 @@ export const professionalTemplates: ResumeTemplate[] = [
     pageStyle: 'single',
   },
   {
+    id: 'pro-icon-title',
+    name: '图标标题',
+    category: 'professional',
+    desc: '模块标题配圆形图标，层次清晰',
+    className: 'tpl-pro-icon',
+    layout: makeLayout({ themeColor: '#3a78e0', moduleSpacing: 12 }),
+    titleStyle: 'plain',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
+  {
     id: 'pro-blue-wave',
     name: '蓝色波浪',
     category: 'professional',

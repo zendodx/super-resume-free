@@ -127,6 +127,7 @@ const contactList = computed(() => profile.value.contacts.filter((c) => c.value.
       v-for="b in blocks"
       :key="b.key"
       class="pv-block"
+      :data-type="b.module.type"
       :class="{
         'pv-title-block': b.showTitle,
         'pv-first': b.key === firstBlockKey,
