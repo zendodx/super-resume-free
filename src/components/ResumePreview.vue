@@ -4,13 +4,17 @@ import { useResumeStore } from '@/store/resume'
 import ResumeContent, { type PreviewBlock } from './ResumeContent.vue'
 import ResumePage from './ResumePage.vue'
 import { SIDEBAR_TYPES } from '@/templates/sample'
+import { getTemplate } from '@/templates'
 import { buildBlocks } from '@/utils/blocks'
 
 const store = useResumeStore()
 const doc = store.doc
 const layout = doc.layout
 
-const isSidebar = computed(() => doc.pageStyle === 'sidebar-left')
+const isSidebar = computed(() => doc.pageStyle.startsWith('sidebar'))
+const sidebarRight = computed(() => doc.pageStyle === 'sidebar-right')
+/** 双栏时放入侧栏的模块类型：跟随当前模板定义，缺省为技能/荣誉/证书 */
+const sideTypes = computed(() => getTemplate(doc.templateId)?.sideModules ?? SIDEBAR_TYPES)
 
 // ---------- 缩放 ----------
 const zoom = ref<number | 'auto'>('auto')
@@ -38,10 +42,10 @@ const allBlocks = computed<PreviewBlock[]>(() => buildBlocks(doc.modules))
 
 /** 双栏布局：主栏 / 侧栏分块 */
 const sideBlocks = computed<PreviewBlock[]>(() =>
-  isSidebar.value ? allBlocks.value.filter((b) => SIDEBAR_TYPES.includes(b.module.type)) : [],
+  isSidebar.value ? allBlocks.value.filter((b) => sideTypes.value.includes(b.module.type)) : [],
 )
 const mainBlocks = computed<PreviewBlock[]>(() =>
-  isSidebar.value ? allBlocks.value.filter((b) => !SIDEBAR_TYPES.includes(b.module.type)) : allBlocks.value,
+  isSidebar.value ? allBlocks.value.filter((b) => !sideTypes.value.includes(b.module.type)) : allBlocks.value,
 )
 
 // ---------- 分页测量 ----------
@@ -192,6 +196,7 @@ const sideBlocksForPage = (i: number) => (i === 0 ? sideBlocks.value : [])
           :main-blocks="page"
           :side-blocks="sideBlocksForPage(pi)"
           :sidebar="isSidebar"
+          :sidebar-right="sidebarRight"
           :show-profile="pi === 0"
           :margin-mm="layout.pageMargin"
           :ctx="{ className: store.templateClass }"

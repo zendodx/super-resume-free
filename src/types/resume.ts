@@ -56,8 +56,8 @@ export type TitleStyle =
 /** 个人信息头部风格 */
 export type ProfileStyle = 'left' | 'center' | 'nameBar' | 'band' | 'banner'
 
-/** 页面布局风格：单栏 / 左侧双色栏 */
-export type PageStyle = 'single' | 'sidebar-left'
+/** 页面布局风格：单栏 / 左右双色栏 */
+export type PageStyle = 'single' | 'sidebar-left' | 'sidebar-right'
 
 /** 简历模板预设 */
 export interface ResumeTemplate {
@@ -71,6 +71,8 @@ export interface ResumeTemplate {
   titleStyle: TitleStyle
   profileStyle: ProfileStyle
   pageStyle: PageStyle
+  /** 双栏布局时放入侧栏的模块类型（缺省为技能/荣誉/证书，可传空数组让侧栏只放个人信息） */
+  sideModules?: ModuleType[]
 }
 
 /** 排版设置 */

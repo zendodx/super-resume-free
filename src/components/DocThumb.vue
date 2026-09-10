@@ -11,13 +11,18 @@ const props = defineProps<{ doc: ResumeDoc }>()
 
 const blocks = computed<PreviewBlock[]>(() => buildBlocks(props.doc.modules))
 
-const isSidebar = computed(() => props.doc.pageStyle === 'sidebar-left')
+const isSidebar = computed(() => props.doc.pageStyle.startsWith('sidebar'))
+const sidebarRight = computed(() => props.doc.pageStyle === 'sidebar-right')
+/** 双栏时放入侧栏的模块类型：跟随该简历应用的模板定义 */
+const sideTypes = computed(
+  () => getTemplate(props.doc.templateId)?.sideModules ?? SIDEBAR_TYPES,
+)
 
 const sideBlocks = computed<PreviewBlock[]>(() =>
-  isSidebar.value ? blocks.value.filter((b) => SIDEBAR_TYPES.includes(b.module.type)) : [],
+  isSidebar.value ? blocks.value.filter((b) => sideTypes.value.includes(b.module.type)) : [],
 )
 const mainBlocks = computed<PreviewBlock[]>(() =>
-  isSidebar.value ? blocks.value.filter((b) => !SIDEBAR_TYPES.includes(b.module.type)) : blocks.value,
+  isSidebar.value ? blocks.value.filter((b) => !sideTypes.value.includes(b.module.type)) : blocks.value,
 )
 
 const ctx = computed(() => ({
@@ -64,6 +69,7 @@ onBeforeUnmount(() => observer?.disconnect())
         :main-blocks="mainBlocks"
         :side-blocks="sideBlocks"
         :sidebar="isSidebar"
+        :sidebar-right="sidebarRight"
         :show-profile="true"
         :margin-mm="doc.layout.pageMargin"
         :ctx="ctx"

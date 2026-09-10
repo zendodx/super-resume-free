@@ -9,6 +9,8 @@ defineProps<{
   sideBlocks?: PreviewBlock[]
   /** 是否双栏布局 */
   sidebar: boolean
+  /** 双栏时侧栏是否置于右侧 */
+  sidebarRight?: boolean
   /** 是否渲染个人信息头部 */
   showProfile: boolean
   /** 页边距 mm */
@@ -29,6 +31,10 @@ defineProps<{
     :style="{ ...styleVars, ...(sidebar ? {} : { padding: `${marginMm}mm` }) }"
   >
     <template v-if="sidebar">
+      <!-- 右侧栏：先渲染主栏 -->
+      <div v-if="sidebarRight" class="pv-main-col" :style="{ padding: `${marginMm}mm` }">
+        <ResumeContent :blocks="mainBlocks" :first-block-key="mainBlocks[0]?.key" :ctx="ctx" />
+      </div>
       <div class="pv-side-col" :style="{ padding: `${marginMm}mm 8mm` }">
         <ResumeContent
           :blocks="sideBlocks ?? []"
@@ -37,7 +43,7 @@ defineProps<{
           :profile-override="profileOverride"
         />
       </div>
-      <div class="pv-main-col" :style="{ padding: `${marginMm}mm` }">
+      <div v-if="!sidebarRight" class="pv-main-col" :style="{ padding: `${marginMm}mm` }">
         <ResumeContent :blocks="mainBlocks" :first-block-key="mainBlocks[0]?.key" :ctx="ctx" />
       </div>
     </template>

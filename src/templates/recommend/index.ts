@@ -16,17 +16,6 @@ export const recommendTemplates: ResumeTemplate[] = [
     pageStyle: 'single',
   },
   {
-    id: 'rec-blue',
-    name: '商务蓝',
-    category: 'recommend',
-    desc: '深蓝标题色，商务感与可读性兼顾',
-    className: 'tpl-rec-blue',
-    layout: makeLayout({ themeColor: '#2c6ec8' }),
-    titleStyle: 'underline',
-    profileStyle: 'left',
-    pageStyle: 'single',
-  },
-  {
     id: 'rec-green',
     name: '活力绿',
     category: 'recommend',
