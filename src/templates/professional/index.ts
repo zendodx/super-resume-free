@@ -38,6 +38,18 @@ export const professionalTemplates: ResumeTemplate[] = [
     pageStyle: 'single',
   },
   {
+    id: 'pro-rail-right',
+    name: '右侧栏',
+    category: 'professional',
+    desc: '右侧个人信息栏，丝带式模块标题',
+    className: 'tpl-pro-rail',
+    layout: makeLayout({ themeColor: '#0e7490', moduleSpacing: 14, lineHeight: 1.7 }),
+    titleStyle: 'plain',
+    profileStyle: 'left',
+    pageStyle: 'sidebar-right',
+    sideModules: [], // 侧栏只放个人信息，模块全部留在主栏
+  },
+  {
     id: 'pro-icon-title',
     name: '图标标题',
     category: 'professional',

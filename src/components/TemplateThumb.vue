@@ -12,14 +12,17 @@ const sampleBlocks = computed<PreviewBlock[]>(() =>
   SAMPLE_MODULES.map((m) => ({ key: m.id, module: m, items: m.items, showTitle: true })),
 )
 
-const isSidebar = computed(() => props.template.pageStyle === 'sidebar-left')
+const isSidebar = computed(() => props.template.pageStyle.startsWith('sidebar'))
+const sidebarRight = computed(() => props.template.pageStyle === 'sidebar-right')
+/** 双栏时放入侧栏的模块类型：模板可自定义，缺省为技能/荣誉/证书 */
+const sideTypes = computed(() => props.template.sideModules ?? SIDEBAR_TYPES)
 
 const sideBlocks = computed<PreviewBlock[]>(() =>
-  isSidebar.value ? sampleBlocks.value.filter((b) => SIDEBAR_TYPES.includes(b.module.type)) : [],
+  isSidebar.value ? sampleBlocks.value.filter((b) => sideTypes.value.includes(b.module.type)) : [],
 )
 const mainBlocks = computed<PreviewBlock[]>(() =>
   isSidebar.value
-    ? sampleBlocks.value.filter((b) => !SIDEBAR_TYPES.includes(b.module.type))
+    ? sampleBlocks.value.filter((b) => !sideTypes.value.includes(b.module.type))
     : sampleBlocks.value,
 )
 
@@ -67,6 +70,7 @@ onBeforeUnmount(() => observer?.disconnect())
         :main-blocks="mainBlocks"
         :side-blocks="sideBlocks"
         :sidebar="isSidebar"
+        :sidebar-right="sidebarRight"
         :show-profile="true"
         :margin-mm="template.layout.pageMargin"
         :ctx="ctx"

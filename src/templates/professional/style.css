@@ -203,11 +203,60 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M21.41 11.58l-9-9A2 2 0 0 0 11 2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 .59 1.42l9 9a2 2 0 0 0 2.82 0l7-7a2 2 0 0 0 0-2.84zM6.5 8A1.5 1.5 0 1 1 8 6.5 1.5 1.5 0 0 1 6.5 8z'/%3E%3C/svg%3E");
 }
 
+/* ========== 右侧栏：丝带式模块标题（主题色标签 + 延伸细线） ========== */
+/* 用 .tpl-pro-rail 前缀（模板类名同时挂在页面上），兼容编辑器双栏测量容器 */
+.tpl-pro-rail .pv-title-block .pv-module-title {
+  gap: 0;
+  margin-bottom: 10px;
+  padding-bottom: 0;
+  border-bottom: none;
+  font-size: 1.1em;
+  letter-spacing: 0.06em;
+}
+/* 丝带标签本体：主题色底 + 白字，右端圆角 */
+.tpl-pro-rail .pv-module-title-text {
+  position: relative;
+  background: var(--pv-theme);
+  color: #fff;
+  padding: 5px 18px 7px 14px;
+  border-radius: 3px 16px 16px 3px;
+  line-height: 1.4;
+}
+/* 左下角卷边：主题色方块上叠白色圆角方块，留出弧形缺口 */
+.tpl-pro-rail .pv-module-title-text::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 7px;
+  height: 7px;
+  background: var(--pv-theme);
+}
+.tpl-pro-rail .pv-module-title-text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  border-radius: 0 0 0 7px;
+}
+/* 标签右侧延伸出通栏细线 */
+.tpl-pro-rail .pv-title-block .pv-module-title::after {
+  content: '';
+  flex: 1;
+  margin-left: 12px;
+  margin-bottom: 9px;
+  border-bottom: 1px solid #cfd6de;
+}
+
 /* 打印时强制输出色带底色 */
 @media print {
   .pv-content.tpl-pro-dark .pv-profile::before,
   .pv-content.tpl-pro-wave .pv-profile::before,
-  .pv-content.tpl-pro-icon .pv-title-block .pv-module-title::before {
+  .pv-content.tpl-pro-icon .pv-title-block .pv-module-title::before,
+  .tpl-pro-rail .pv-module-title-text {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
