@@ -13,6 +13,7 @@ import { MODULE_SCHEMAS, uid } from '@/data/constants'
 import { getTemplate } from '@/templates'
 import { useLibraryStore } from '@/store/library'
 import { cloneDoc } from '@/utils/doc'
+import type { DownloadFormat } from '@/utils/export'
 
 export const useResumeStore = defineStore('resume', () => {
   const lib = useLibraryStore()
@@ -26,7 +27,8 @@ export const useResumeStore = defineStore('resume', () => {
     saveState: 'saved' as 'saved' | 'saving',
     onePageSignal: 0, // 智能一页请求信号
     downloadSignal: 0,
-    downloading: false, // 正在生成 PDF
+    downloading: false, // 正在生成导出文件
+    downloadFormat: 'pdf' as DownloadFormat, // 本次导出格式
   })
 
   // ---------- 持久化（写回简历库中绑定的记录） ----------
@@ -256,7 +258,8 @@ export const useResumeStore = defineStore('resume', () => {
     ui.onePageSignal++
   }
 
-  function requestDownload() {
+  function requestDownload(format: DownloadFormat = 'pdf') {
+    ui.downloadFormat = format
     ui.downloadSignal++
   }
 

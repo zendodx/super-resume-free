@@ -7,6 +7,7 @@ import { SIDEBAR_TYPES } from '@/templates/sample'
 import { getTemplate } from '@/templates'
 import { buildBlocks } from '@/utils/blocks'
 import { downloadResumePdf } from '@/utils/pdf'
+import { downloadResumePng, downloadResumeWord, downloadMarkdown } from '@/utils/export'
 
 const store = useResumeStore()
 const doc = store.doc
@@ -124,7 +125,7 @@ watch(
   },
 )
 
-// ---------- 下载 PDF（失败时回退到浏览器打印） ----------
+// ---------- 导出（PDF / 图片 / Word / Markdown，失败时回退到浏览器打印） ----------
 watch(
   () => store.ui.downloadSignal,
   () => {
@@ -133,14 +134,22 @@ watch(
 )
 
 async function doDownload() {
+  const fmt = store.ui.downloadFormat
+  if (store.ui.downloading) return
+  if (fmt === 'md') {
+    downloadMarkdown(doc.name || '简历', doc)
+    return
+  }
   const root = scrollEl.value
-  if (!root || store.ui.downloading) return
+  if (!root) return
   store.ui.downloading = true
   try {
     await nextTick() // 等待分页渲染稳定
-    await downloadResumePdf(doc.name || '简历', root)
+    if (fmt === 'pdf') await downloadResumePdf(doc.name || '简历', root)
+    else if (fmt === 'png') await downloadResumePng(doc.name || '简历', root)
+    else if (fmt === 'word') await downloadResumeWord(doc.name || '简历', root)
   } catch (err) {
-    console.error('PDF 生成失败，回退到浏览器打印', err)
+    console.error('导出失败，回退到浏览器打印', err)
     document.body.classList.add('printing')
     await nextTick()
     window.print()
