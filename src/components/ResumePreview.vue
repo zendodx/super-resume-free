@@ -6,6 +6,9 @@ import ResumePage from './ResumePage.vue'
 import { SIDEBAR_TYPES } from '@/templates/sample'
 import { getTemplate } from '@/templates'
 import { buildBlocks } from '@/utils/blocks'
+import { downloadResumePdf } from '@/utils/pdf'
+import { downloadResumePng, downloadMarkdown } from '@/utils/export'
+import { downloadResumeDocx } from '@/utils/docx'
 
 const store = useResumeStore()
 const doc = store.doc
@@ -123,17 +126,55 @@ watch(
   },
 )
 
-// ---------- 下载 / 打印 ----------
+// ---------- 导出（PDF / 图片 / Word / Markdown，失败时回退到浏览器打印） ----------
 watch(
   () => store.ui.downloadSignal,
   () => {
-    document.body.classList.add('printing')
-    nextTick(() => {
-      window.print()
-      setTimeout(() => document.body.classList.remove('printing'), 400)
-    })
+    void doDownload()
   },
 )
+
+async function doDownload() {
+  const fmt = store.ui.downloadFormat
+  if (store.ui.downloading) return
+  if (fmt === 'print') {
+    // 浏览器原生打印（走系统打印对话框，可在其中另存为 PDF）
+    await nextTick() // 等待分页渲染稳定
+    document.body.classList.add('printing')
+    window.print()
+    setTimeout(() => document.body.classList.remove('printing'), 400)
+    return
+  }
+  if (fmt === 'md') {
+    downloadMarkdown(doc.name || '简历', doc)
+    return
+  }
+  if (fmt === 'word') {
+    store.ui.downloading = true
+    try {
+      await downloadResumeDocx(doc.name || '简历', doc)
+    } finally {
+      store.ui.downloading = false
+    }
+    return
+  }
+  const root = scrollEl.value
+  if (!root) return
+  store.ui.downloading = true
+  try {
+    await nextTick() // 等待分页渲染稳定
+    if (fmt === 'pdf') await downloadResumePdf(doc.name || '简历', root)
+    else if (fmt === 'png') await downloadResumePng(doc.name || '简历', root)
+  } catch (err) {
+    console.error('导出失败，回退到浏览器打印', err)
+    document.body.classList.add('printing')
+    await nextTick()
+    window.print()
+    setTimeout(() => document.body.classList.remove('printing'), 400)
+  } finally {
+    store.ui.downloading = false
+  }
+}
 
 // ---------- 生命周期 ----------
 function onResize() {

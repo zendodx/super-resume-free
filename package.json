@@ -1,14 +1,17 @@
 {
   "name": "super-resume-free",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build && mkdir -p docs release && cp dist/index.html docs/index.html && cp dist/index.html release/index.html",
+    "build": "vue-tsc --noEmit && vite build && mkdir -p docs release && cp dist/index.html docs/index.html",
     "preview": "vite preview"
   },
   "dependencies": {
+    "docx": "^9.7.1",
+    "html-to-image": "^1.11.13",
+    "jspdf": "^4.2.1",
     "pinia": "^2.1.7",
     "vue": "^3.4.21"
   },

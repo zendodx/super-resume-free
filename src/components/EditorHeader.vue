@@ -10,6 +10,7 @@ import {
 } from '@/data/constants'
 import SelectDropdown from './SelectDropdown.vue'
 import ColorPickerPopover from './ColorPickerPopover.vue'
+import type { DownloadFormat } from '@/utils/export'
 
 const emit = defineEmits<{
   (e: 'openSort'): void
@@ -51,6 +52,20 @@ const colorValue = computed({
 const savedText = computed(() =>
   store.ui.saveState === 'saving' ? '保存中…' : `已保存 ${relativeTime(store.doc.updatedAt)}`,
 )
+
+// ---------- 导出菜单 ----------
+const downloadMenuOpen = ref(false)
+const EXPORT_OPTIONS: { fmt: DownloadFormat; label: string }[] = [
+  { fmt: 'pdf', label: '导出 PDF' },
+  { fmt: 'print', label: '浏览器打印 PDF' },
+  { fmt: 'png', label: '导出图片 PNG' },
+  { fmt: 'word', label: '导出 Word' },
+  { fmt: 'md', label: '导出 Markdown' },
+]
+function pickFormat(fmt: DownloadFormat) {
+  downloadMenuOpen.value = false
+  store.requestDownload(fmt)
+}
 
 function relativeTime(ts: number): string {
   const diff = Math.floor((Date.now() - ts) / 1000)
@@ -127,10 +142,26 @@ function commitName() {
       <button class="eh-item" type="button" title="重置为示例简历" @click="store.resetResume()">
         <Icon name="reset" :size="19" />
       </button>
-      <button class="eh-download" type="button" @click="store.requestDownload()">
-        <Icon name="download" :size="18" />
-        下载
-      </button>
+<div class="eh-dd">
+<div v-if="downloadMenuOpen" class="eh-dd-mask" @click="downloadMenuOpen = false" />
+<button class="eh-download" type="button" :disabled="store.ui.downloading" @click.stop="downloadMenuOpen = !downloadMenuOpen">
+<Icon name="download" :size="18" />
+{{ store.ui.downloading ? '生成中…' : '下载' }}
+<Icon name="chevron-down" :size="13" />
+</button>
+<div v-if="downloadMenuOpen" class="eh-dd-menu">
+<button
+v-for="opt in EXPORT_OPTIONS"
+:key="opt.fmt"
+class="eh-dd-item"
+type="button"
+@click="pickFormat(opt.fmt)"
+>
+<Icon name="save" :size="15" />
+{{ opt.label }}
+</button>
+</div>
+</div>
     </div>
   </header>
 </template>
@@ -266,5 +297,49 @@ export default {
 }
 .eh-download:hover {
   background: var(--brand-hover);
+}
+.eh-download:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+/* ---------- 导出格式下拉 ---------- */
+.eh-dd {
+  position: relative;
+}
+.eh-dd-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+.eh-dd-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 201;
+  min-width: 150px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+}
+.eh-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: var(--text-main);
+  text-align: left;
+  white-space: nowrap;
+  transition: background 0.12s;
+}
+.eh-dd-item:hover {
+  background: #f0f1f3;
+}
+.eh-dd-item .icon {
+  color: var(--text-light);
 }
 </style>
