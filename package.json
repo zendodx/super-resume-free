@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build && mkdir -p docs release && cp dist/index.html docs/index.html && cp dist/index.html release/index.html",
+    "build": "vue-tsc --noEmit && vite build && mkdir -p docs release && cp dist/index.html docs/index.html",
     "preview": "vite preview"
   },
   "dependencies": {
