@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "docx": "^9.7.1",
     "html-to-image": "^1.11.13",
     "jspdf": "^4.2.1",
     "pinia": "^2.1.7",

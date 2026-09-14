@@ -7,7 +7,8 @@ import { SIDEBAR_TYPES } from '@/templates/sample'
 import { getTemplate } from '@/templates'
 import { buildBlocks } from '@/utils/blocks'
 import { downloadResumePdf } from '@/utils/pdf'
-import { downloadResumePng, downloadResumeWord, downloadMarkdown } from '@/utils/export'
+import { downloadResumePng, downloadMarkdown } from '@/utils/export'
+import { downloadResumeDocx } from '@/utils/docx'
 
 const store = useResumeStore()
 const doc = store.doc
@@ -140,6 +141,15 @@ async function doDownload() {
     downloadMarkdown(doc.name || '简历', doc)
     return
   }
+  if (fmt === 'word') {
+    store.ui.downloading = true
+    try {
+      await downloadResumeDocx(doc.name || '简历', doc)
+    } finally {
+      store.ui.downloading = false
+    }
+    return
+  }
   const root = scrollEl.value
   if (!root) return
   store.ui.downloading = true
@@ -147,7 +157,6 @@ async function doDownload() {
     await nextTick() // 等待分页渲染稳定
     if (fmt === 'pdf') await downloadResumePdf(doc.name || '简历', root)
     else if (fmt === 'png') await downloadResumePng(doc.name || '简历', root)
-    else if (fmt === 'word') await downloadResumeWord(doc.name || '简历', root)
   } catch (err) {
     console.error('导出失败，回退到浏览器打印', err)
     document.body.classList.add('printing')

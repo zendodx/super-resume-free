@@ -97,27 +97,6 @@ export async function downloadResumePng(filename: string, previewRoot: HTMLEleme
   })
 }
 
-// ---------- Word：Word 兼容 HTML（.doc） ----------
-export async function downloadResumeWord(filename: string, previewRoot: HTMLElement): Promise<void> {
-  await withSandboxClones(previewRoot, async (clones) => {
-    const styles = Array.from(document.querySelectorAll('style'))
-      .map((s) => s.textContent ?? '')
-      .join('\n')
-    const body = clones.map((c) => c.outerHTML).join('\n')
-    const html = [
-      '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">',
-      '<head><meta charset="utf-8"/>',
-      `<style>@page{size:A4;margin:10mm;}.pv-page{width:190mm;min-height:0;height:auto;margin:0 0 12px;box-shadow:none;border-radius:0;overflow:visible;} ${styles}</style>`,
-      '</head><body>',
-      body,
-      '</body></html>',
-    ].join('')
-    // BOM 保证 Word 按 UTF-8 打开
-    const blob = new Blob(['﻿', html], { type: 'application/msword;charset=utf-8' })
-    saveBlob(blob, `${filename || '简历'}.doc`)
-  })
-}
-
 // ---------- Markdown：由简历数据模型生成 ----------
 function partsOf(module: ResumeModule, item: ResumeItem) {
   const schema = MODULE_SCHEMAS[module.type as keyof typeof MODULE_SCHEMAS] ?? []
