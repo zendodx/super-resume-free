@@ -6,6 +6,7 @@ import ResumePage from './ResumePage.vue'
 import { SIDEBAR_TYPES } from '@/templates/sample'
 import { getTemplate } from '@/templates'
 import { buildBlocks } from '@/utils/blocks'
+import { downloadResumePdf } from '@/utils/pdf'
 
 const store = useResumeStore()
 const doc = store.doc
@@ -123,17 +124,31 @@ watch(
   },
 )
 
-// ---------- 下载 / 打印 ----------
+// ---------- 下载 PDF（失败时回退到浏览器打印） ----------
 watch(
   () => store.ui.downloadSignal,
   () => {
-    document.body.classList.add('printing')
-    nextTick(() => {
-      window.print()
-      setTimeout(() => document.body.classList.remove('printing'), 400)
-    })
+    void doDownload()
   },
 )
+
+async function doDownload() {
+  const root = scrollEl.value
+  if (!root || store.ui.downloading) return
+  store.ui.downloading = true
+  try {
+    await nextTick() // 等待分页渲染稳定
+    await downloadResumePdf(doc.name || '简历', root)
+  } catch (err) {
+    console.error('PDF 生成失败，回退到浏览器打印', err)
+    document.body.classList.add('printing')
+    await nextTick()
+    window.print()
+    setTimeout(() => document.body.classList.remove('printing'), 400)
+  } finally {
+    store.ui.downloading = false
+  }
+}
 
 // ---------- 生命周期 ----------
 function onResize() {

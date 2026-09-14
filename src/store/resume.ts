@@ -26,6 +26,7 @@ export const useResumeStore = defineStore('resume', () => {
     saveState: 'saved' as 'saved' | 'saving',
     onePageSignal: 0, // 智能一页请求信号
     downloadSignal: 0,
+    downloading: false, // 正在生成 PDF
   })
 
   // ---------- 持久化（写回简历库中绑定的记录） ----------

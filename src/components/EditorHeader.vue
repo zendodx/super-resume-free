@@ -127,10 +127,10 @@ function commitName() {
       <button class="eh-item" type="button" title="重置为示例简历" @click="store.resetResume()">
         <Icon name="reset" :size="19" />
       </button>
-      <button class="eh-download" type="button" @click="store.requestDownload()">
-        <Icon name="download" :size="18" />
-        下载
-      </button>
+<button class="eh-download" type="button" :disabled="store.ui.downloading" @click="store.requestDownload()">
+<Icon name="download" :size="18" />
+{{ store.ui.downloading ? '生成中…' : '下载' }}
+</button>
     </div>
   </header>
 </template>
