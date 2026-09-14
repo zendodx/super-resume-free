@@ -137,6 +137,14 @@ watch(
 async function doDownload() {
   const fmt = store.ui.downloadFormat
   if (store.ui.downloading) return
+  if (fmt === 'print') {
+    // 浏览器原生打印（走系统打印对话框，可在其中另存为 PDF）
+    await nextTick() // 等待分页渲染稳定
+    document.body.classList.add('printing')
+    window.print()
+    setTimeout(() => document.body.classList.remove('printing'), 400)
+    return
+  }
   if (fmt === 'md') {
     downloadMarkdown(doc.name || '简历', doc)
     return

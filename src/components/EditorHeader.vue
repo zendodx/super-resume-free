@@ -57,6 +57,7 @@ const savedText = computed(() =>
 const downloadMenuOpen = ref(false)
 const EXPORT_OPTIONS: { fmt: DownloadFormat; label: string }[] = [
   { fmt: 'pdf', label: '导出 PDF' },
+  { fmt: 'print', label: '浏览器打印 PDF' },
   { fmt: 'png', label: '导出图片 PNG' },
   { fmt: 'word', label: '导出 Word' },
   { fmt: 'md', label: '导出 Markdown' },

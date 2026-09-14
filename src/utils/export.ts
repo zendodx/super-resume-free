@@ -3,7 +3,7 @@ import type { ResumeDoc, ResumeItem, ResumeModule } from '@/types/resume'
 import { MODULE_SCHEMAS } from '@/data/constants'
 
 /** 导出格式 */
-export type DownloadFormat = 'pdf' | 'png' | 'word' | 'md'
+export type DownloadFormat = 'pdf' | 'png' | 'word' | 'md' | 'print'
 
 /** 导出清晰度倍率 */
 const SCALE = 2
