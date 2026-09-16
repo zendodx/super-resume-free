@@ -5,6 +5,17 @@ import './style.css'
 /** 经典分类模板 */
 export const classicTemplates: ResumeTemplate[] = [
   {
+    id: 'cls-pill',
+    name: '胶囊横幅',
+    category: 'classic',
+    desc: '圆角横幅头部 + 胶囊式模块标题，两栏信息三栏条目',
+    className: 'tpl-cls-pill',
+    layout: makeLayout({ themeColor: '#5e7fa0', moduleSpacing: 14, pageMargin: 12 }),
+    titleStyle: 'plain',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
+  {
     id: 'cls-tag',
     name: '经典',
     category: 'classic',
