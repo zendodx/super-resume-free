@@ -5,6 +5,28 @@ import './style.css'
 /** 专业分类模板 */
 export const professionalTemplates: ResumeTemplate[] = [
   {
+    id: 'pro-amber',
+    name: '琥珀双线',
+    category: 'professional',
+    desc: '琥珀暖色，双线夹标题 + 虚线分隔条目',
+    className: 'tpl-pro-amber',
+    layout: makeLayout({ themeColor: '#b45309', moduleSpacing: 13 }),
+    titleStyle: 'plain',
+    profileStyle: 'nameBar',
+    pageStyle: 'single',
+  },
+  {
+    id: 'pro-mint',
+    name: '薄荷侧带',
+    category: 'professional',
+    desc: '左侧窄色带 + 浅薄荷头部，方块引导标题',
+    className: 'tpl-pro-mint',
+    layout: makeLayout({ themeColor: '#0d9488', moduleSpacing: 13, pageMargin: 12 }),
+    titleStyle: 'plain',
+    profileStyle: 'banner',
+    pageStyle: 'single',
+  },
+  {
     id: 'pro-band',
     name: '顶部蓝带',
     category: 'professional',

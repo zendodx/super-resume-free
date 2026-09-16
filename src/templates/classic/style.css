@@ -334,3 +334,63 @@
     -webkit-print-color-adjust: exact;
   }
 }
+
+/* =========================================================
+ * 经典（tpl-cls-leader）：点状引导线标题 + 头部两端分布
+ * ========================================================= */
+
+/* ---------- 头部：姓名居左、联系方式竖排居右，底部对齐 ---------- */
+.tpl-cls-leader .pv-profile-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 20px;
+  align-items: end;
+}
+.tpl-cls-leader .pv-profile-info {
+  display: contents;
+}
+.tpl-cls-leader .pv-profile-name {
+  grid-column: 1;
+  color: var(--pv-theme);
+  font-size: 1.9em;
+  letter-spacing: 0.1em;
+}
+.tpl-cls-leader .pv-profile-intention {
+  grid-column: 1;
+  color: #4e5359;
+}
+.tpl-cls-leader .pv-profile-contacts {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  margin-top: 0;
+  text-align: right;
+}
+.tpl-cls-leader .pv-contact-item {
+  display: block;
+  margin-right: 0;
+  line-height: 1.9;
+}
+.tpl-cls-leader .pv-contact-label {
+  color: #9aa0a6;
+  margin-right: 4px;
+}
+.tpl-cls-leader .pv-profile-avatar {
+  grid-column: 2;
+}
+
+/* ---------- 模块标题：主题色文字 + 点状引导线通栏 ---------- */
+.tpl-cls-leader .pv-module-title {
+  padding-bottom: 2px;
+  letter-spacing: 0.1em;
+}
+.tpl-cls-leader .pv-module-title::after {
+  content: '';
+  flex: 1;
+  margin-left: 10px;
+  border-top: 2px dotted color-mix(in srgb, var(--pv-theme) 50%, #fff);
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-cls-leader .pv-desc li::marker {
+  color: var(--pv-theme);
+}

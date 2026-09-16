@@ -5,6 +5,17 @@ import './style.css'
 /** 经典分类模板 */
 export const classicTemplates: ResumeTemplate[] = [
   {
+    id: 'cls-leader',
+    name: '点线雅紫',
+    category: 'classic',
+    desc: '点状引导线标题，头部姓名与信息两端分布',
+    className: 'tpl-cls-leader',
+    layout: makeLayout({ themeColor: '#6d4fa3', moduleSpacing: 14, pageMargin: 12 }),
+    titleStyle: 'plain',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
+  {
     id: 'cls-pill',
     name: '胶囊横幅',
     category: 'classic',

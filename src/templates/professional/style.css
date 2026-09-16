@@ -309,3 +309,76 @@
     -webkit-print-color-adjust: exact;
   }
 }
+
+/* =========================================================
+ * 专业（tpl-pro-amber）：琥珀暖色，上下双线夹标题 + 虚线分隔条目
+ * ========================================================= */
+
+/* ---------- 模块标题：上下通栏细线夹住标题文字 ---------- */
+.tpl-pro-amber .pv-module-title {
+  padding: 5px 0;
+  letter-spacing: 0.12em;
+  border-top: 1px solid color-mix(in srgb, var(--pv-theme) 45%, #fff);
+  border-bottom: 1px solid color-mix(in srgb, var(--pv-theme) 45%, #fff);
+}
+
+/* ---------- 条目头：下划虚线分隔，条目节奏清晰 ---------- */
+.tpl-pro-amber .pv-item-head {
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px dashed #e8ddcb;
+}
+
+/* ---------- 联系方式：圆点分隔 ---------- */
+.tpl-pro-amber .pv-contact-item:not(:last-child)::after {
+  content: '·';
+  margin: 0 0.6em;
+  color: color-mix(in srgb, var(--pv-theme) 60%, #fff);
+}
+.tpl-pro-amber .pv-contact-label {
+  display: none;
+}
+
+/* =========================================================
+ * 专业（tpl-pro-mint）：左侧窄色带 + 浅薄荷头部 + 方块引导标题
+ * ========================================================= */
+
+/* ---------- 页面左侧 4mm 竖向色带（仅画在页面上，避免内容容器重复） ---------- */
+.pv-page.tpl-pro-mint {
+  background-image: linear-gradient(to right, var(--pv-theme), var(--pv-theme));
+  background-size: 4mm 100%;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+/* ---------- 头部：浅薄荷色横带 ---------- */
+.tpl-pro-mint {
+  --pv-banner-bg: #e9f5f2;
+}
+
+/* ---------- 模块标题：实心小方块引导 ---------- */
+.tpl-pro-mint .pv-module-title {
+  padding-bottom: 0;
+  letter-spacing: 0.08em;
+}
+.tpl-pro-mint .pv-module-title::before {
+  content: '';
+  width: 0.55em;
+  height: 0.55em;
+  flex-shrink: 0;
+  margin-right: 8px;
+  background: var(--pv-theme);
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-pro-mint .pv-desc li::marker {
+  color: var(--pv-theme);
+}
+
+@media print {
+  .pv-page.tpl-pro-mint,
+  .tpl-pro-mint .pv-module-title::before {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
