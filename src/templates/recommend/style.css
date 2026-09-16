@@ -10,3 +10,43 @@
   padding: 4px 12px;
   border-radius: 3px;
 }
+
+/* =========================================================
+ * 推荐（tpl-rec-magazine）：宋体刊头 + 粗细双线 + 宽字距标题
+ * ========================================================= */
+
+/* ---------- 头部：超大宋体姓名，底部 3px 粗线 + 1px 细线（刊头双线） ---------- */
+.tpl-rec-magazine .pv-profile {
+  padding-bottom: 14px;
+  background-image:
+    linear-gradient(var(--pv-theme), var(--pv-theme)),
+    linear-gradient(var(--pv-theme), var(--pv-theme));
+  background-size:
+    100% 3px,
+    100% 1px;
+  background-position:
+    left bottom,
+    left bottom 5px;
+  background-repeat: no-repeat;
+}
+.tpl-rec-magazine .pv-profile-name {
+  font-size: 2.1em;
+  letter-spacing: 0.2em;
+}
+.tpl-rec-magazine .pv-profile-intention {
+  color: var(--pv-theme);
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 模块标题：小号宽字距 + 通栏细线 ---------- */
+.tpl-rec-magazine .pv-module-title {
+  font-size: 1em;
+  letter-spacing: 0.3em;
+  border-bottom-width: 1px;
+}
+
+/* ---------- 条目要点：空心方块符号 ---------- */
+.tpl-rec-magazine .pv-desc li::marker {
+  content: '▫  ';
+  color: var(--pv-theme);
+}

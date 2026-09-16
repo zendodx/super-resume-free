@@ -63,7 +63,7 @@ export type PageStyle = 'single' | 'sidebar-left' | 'sidebar-right'
 export interface ResumeTemplate {
   id: string
   name: string
-  category: 'recommend' | 'professional' | 'classic' | 'minimal'
+  category: 'recommend' | 'professional' | 'classic' | 'minimal' | 'forest'
   desc: string
   /** 专属样式类名（对应 templates/<category>/style.css 中的 .tpl-* 规则） */
   className: string

@@ -1,9 +1,20 @@
 import type { ResumeTemplate } from '@/types/resume'
-import { makeLayout } from '../helper'
+import { makeLayout, FONTS } from '../helper'
 import './style.css'
 
 /** 推荐分类模板 */
 export const recommendTemplates: ResumeTemplate[] = [
+  {
+    id: 'rec-magazine',
+    name: '杂志刊头',
+    category: 'recommend',
+    desc: '宋体刊头式大姓名 + 粗细双线，杂志排版感',
+    className: 'tpl-rec-magazine',
+    layout: makeLayout({ fontFamily: FONTS.SONG, fontSize: 14.5, moduleSpacing: 13 }),
+    titleStyle: 'underline',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
   {
     id: 'rec-classic',
     name: '经典黑',

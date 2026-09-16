@@ -1,11 +1,12 @@
 {
   "name": "super-resume-free",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build && mkdir -p docs release && cp dist/index.html docs/index.html",
+    "release": "bash scripts/release.sh",
     "preview": "vite preview"
   },
   "dependencies": {

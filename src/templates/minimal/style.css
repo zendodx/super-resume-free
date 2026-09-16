@@ -113,3 +113,46 @@
   font-size: 1.2em;
   letter-spacing: 0.2em;
 }
+
+/* =========================================================
+ * 简约（tpl-min-dot）：圆点引导标题 + 条目细分隔线
+ * ========================================================= */
+
+/* ---------- 模块标题：实心圆点引导，中等字重无线条 ---------- */
+.tpl-min-dot .pv-module-title {
+  padding-bottom: 0;
+  font-weight: 600;
+  color: #2b3036;
+  letter-spacing: 0.06em;
+}
+.tpl-min-dot .pv-module-title::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-right: 9px;
+  background: var(--pv-theme);
+}
+
+/* ---------- 条目之间：极细灰线分隔，阅读节奏清晰 ---------- */
+.tpl-min-dot .pv-item + .pv-item {
+  border-top: 1px solid #eef0f2;
+  padding-top: 6px;
+}
+.tpl-min-dot .pv-line + .pv-line {
+  border-top: 1px solid #eef0f2;
+  padding-top: 4px;
+}
+
+/* ---------- 要点：浅灰圆点，弱化符号突出文字 ---------- */
+.tpl-min-dot .pv-desc li::marker {
+  color: #b6bcc4;
+}
+
+@media print {
+  .tpl-min-dot .pv-module-title::before {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

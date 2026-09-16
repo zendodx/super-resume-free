@@ -1,0 +1,150 @@
+/* 森系分类模板专属样式 */
+/* 约定：主题色不在模板 CSS 中锁定，默认色写在模板的 layout.themeColor，
+   渲染时以内联 --pv-theme 注入页面，用户可在工具栏随时修改 */
+
+/* =========================================================
+ * 森系（tpl-for-leaf）：叶形圆角徽章标题
+ * ========================================================= */
+
+/* ---------- 模块标题：叶形徽章（对角圆角）+ 右侧细线 ---------- */
+.tpl-for-leaf .pv-module-title {
+  padding-bottom: 0;
+  margin-bottom: 8px;
+  font-size: 1.02em;
+  letter-spacing: 0.06em;
+}
+.tpl-for-leaf .pv-module-title-text {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  background: linear-gradient(135deg, var(--pv-theme), color-mix(in srgb, var(--pv-theme) 78%, #16301c));
+  /* 左上/右下大圆角 + 右上/左下小圆角，模拟叶片轮廓 */
+  border-radius: 14px 3px 14px 3px;
+  padding: 3px 18px;
+  font-size: 0.92em;
+}
+.tpl-for-leaf .pv-module-title::after {
+  content: '';
+  flex: 1;
+  border-top: 1.5px solid color-mix(in srgb, var(--pv-theme) 35%, #fff);
+  margin-left: 12px;
+}
+
+/* ---------- 头部：姓名主题绿 ---------- */
+.tpl-for-leaf .pv-profile-name {
+  color: var(--pv-theme);
+  letter-spacing: 0.1em;
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-for-leaf .pv-desc li::marker {
+  color: var(--pv-theme);
+}
+
+/* =========================================================
+ * 森系（tpl-for-moss）：浅苔绿圆角卡片分区
+ * ========================================================= */
+
+/* ---------- 模块整体：浅绿底圆角卡片 ---------- */
+.tpl-for-moss .pv-block {
+  background: #f2f7f1;
+  border-radius: 10px;
+  padding: 12px 16px calc(12px + var(--pv-item-spacing, 6px));
+}
+.tpl-for-moss .pv-module-title {
+  padding-bottom: 0;
+  font-size: 1.05em;
+  letter-spacing: 0.08em;
+}
+
+/* ---------- 条目头主字段：墨绿加粗 ---------- */
+.tpl-for-moss .pv-item-main,
+.tpl-for-moss .pv-line-main {
+  color: #33503a;
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-for-moss .pv-desc li::marker {
+  color: var(--pv-theme);
+}
+
+/* =========================================================
+ * 森系（tpl-for-shade）：深林绿通栏头部 + 粗竖条标题
+ * ========================================================= */
+
+/* ---------- 模块标题：加粗竖条 + 宽字距 ---------- */
+.tpl-for-shade .pv-module-title {
+  border-left-width: 6px;
+  letter-spacing: 0.15em;
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-for-shade .pv-desc li::marker {
+  color: var(--pv-theme);
+}
+
+/* =========================================================
+ * 森系（tpl-for-bamboo）：竹青双丝线标题 + 居中头部
+ * ========================================================= */
+
+/* ---------- 模块标题：3px 双丝线（border double） ---------- */
+.tpl-for-bamboo .pv-module-title {
+  border-bottom: 3px double color-mix(in srgb, var(--pv-theme) 70%, #fff);
+  padding-bottom: 5px;
+  letter-spacing: 0.2em;
+}
+
+/* ---------- 条目时间：主题色 ---------- */
+.tpl-for-bamboo .pv-item-right {
+  color: var(--pv-theme);
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-for-bamboo .pv-desc li::marker {
+  color: var(--pv-theme);
+}
+
+/* =========================================================
+ * 森系（tpl-for-olive）：橄榄绿菱形引导标题
+ * ========================================================= */
+
+/* ---------- 模块标题：实心菱形引导 ---------- */
+.tpl-for-olive .pv-module-title {
+  padding-bottom: 0;
+  letter-spacing: 0.1em;
+}
+.tpl-for-olive .pv-module-title::before {
+  content: '';
+  width: 0.5em;
+  height: 0.5em;
+  flex-shrink: 0;
+  margin-right: 9px;
+  background: var(--pv-theme);
+  transform: rotate(45deg);
+}
+.tpl-for-olive .pv-module-title::after {
+  content: '';
+  flex: 1;
+  border-top: 1.5px solid #e3e6da;
+  margin-left: 12px;
+}
+
+/* ---------- 技能：类别标签主题色 ---------- */
+.tpl-for-olive .pv-flat-label {
+  color: var(--pv-theme);
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-for-olive .pv-desc li::marker {
+  color: var(--pv-theme);
+}
+
+/* ---------- 打印保真 ---------- */
+@media print {
+  .tpl-for-leaf .pv-module-title-text,
+  .tpl-for-moss .pv-block,
+  .tpl-for-olive .pv-module-title::before {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

@@ -55,6 +55,17 @@ export const minimalTemplates: ResumeTemplate[] = [
     pageStyle: 'single',
   },
   {
+    id: 'min-dot',
+    name: '圆点极简',
+    category: 'minimal',
+    desc: '圆点引导标题，条目细分隔线，干净有节奏',
+    className: 'tpl-min-dot',
+    layout: makeLayout({ themeColor: '#374151', moduleSpacing: 16, itemSpacing: 8, pageMargin: 12, lineHeight: 1.6 }),
+    titleStyle: 'plain',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
+  {
     id: 'min-air',
     name: '留白呼吸',
     category: 'minimal',
