@@ -5,6 +5,17 @@ import './style.css'
 /** 经典分类模板 */
 export const classicTemplates: ResumeTemplate[] = [
   {
+    id: 'cls-tag',
+    name: '经典',
+    category: 'classic',
+    desc: '标签式模块标题，时间居左三栏条目，经典商务风',
+    className: 'tpl-cls-tag',
+    layout: makeLayout({ themeColor: '#5b7a8c', moduleSpacing: 14, pageMargin: 12 }),
+    titleStyle: 'plain',
+    profileStyle: 'left',
+    pageStyle: 'single',
+  },
+  {
     id: 'cls-song',
     name: '宋体雅致',
     category: 'classic',

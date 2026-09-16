@@ -53,3 +53,133 @@
 .tpl-cls-topline-red .pv-module-title {
   border-left-width: 5px;
 }
+
+/* =========================================================
+ * 经典（tpl-cls-tag）：标签式标题 + 两栏基本信息 + 三栏条目头
+ * ========================================================= */
+
+/* ---------- 模块标题：折角标签 + 右侧延伸细线 ---------- */
+.tpl-cls-tag .pv-module-title {
+  padding-bottom: 0;
+  margin-bottom: 8px;
+  font-size: 1.05em;
+  letter-spacing: 0.08em;
+}
+.tpl-cls-tag .pv-module-title-text {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  background: linear-gradient(135deg, var(--pv-theme), color-mix(in srgb, var(--pv-theme) 74%, #1c2b33));
+  padding: 3px 26px 3px 14px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 11px) 100%, 0 100%);
+  border-radius: 4px 0 0 4px;
+}
+.tpl-cls-tag .pv-module-title::after {
+  content: '';
+  flex: 1;
+  border-top: 2px solid color-mix(in srgb, var(--pv-theme) 55%, #fff);
+  margin-left: 4px;
+}
+
+/* ---------- 头部：姓名主题色，意向竖线分隔，信息两栏网格 ---------- */
+.tpl-cls-tag .pv-profile-name {
+  display: inline-block;
+  color: var(--pv-theme);
+  letter-spacing: 0.08em;
+}
+.tpl-cls-tag .pv-profile-intention {
+  display: inline-block;
+  margin: 0 0 0 14px;
+  padding-left: 14px;
+  border-left: 2px solid #d8dee6;
+  color: #4e5359;
+  font-weight: 400;
+}
+.tpl-cls-tag .pv-profile-contacts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 28px;
+  margin-top: 8px;
+}
+.tpl-cls-tag .pv-contact-item {
+  margin-right: 0;
+}
+.tpl-cls-tag .pv-contact-label {
+  color: #9aa0a6;
+}
+
+/* ---------- 条目头：时间居左 | 主字段居中 | 副字段居右 ---------- */
+/* 注：双类名提升优先级，覆盖 ResumeContent 的 scoped 样式 */
+.tpl-cls-tag.tpl-cls-tag .pv-item-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  column-gap: 12px;
+  align-items: baseline;
+}
+.tpl-cls-tag.tpl-cls-tag .pv-item-right {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+}
+/* 右区 flex：主字段居中、副字段同行靠右（教育双副字段不换行） */
+.tpl-cls-tag.tpl-cls-tag .pv-item-head-left {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tpl-cls-tag.tpl-cls-tag .pv-item-main {
+  flex: 1 0 auto;
+  text-align: center;
+}
+.tpl-cls-tag.tpl-cls-tag .pv-item-sub {
+  margin-left: auto;
+}
+
+/* ---------- 要点：主题色圆点 ---------- */
+.tpl-cls-tag .pv-desc li::marker {
+  color: var(--pv-theme);
+}
+
+/* ---------- 荣誉：主题色小圆点引导 ---------- */
+.tpl-cls-tag .pv-block[data-type='awards'] .pv-line-main::before {
+  content: '•';
+  margin-right: 6px;
+  color: var(--pv-theme);
+}
+
+/* ---------- 证书：胶囊标签 ---------- */
+.tpl-cls-tag .pv-block[data-type='certificates'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tpl-cls-tag .pv-block[data-type='certificates'] .pv-module-title {
+  width: 100%;
+}
+.tpl-cls-tag .pv-block[data-type='certificates'] .pv-line {
+  display: inline-flex;
+  gap: 8px;
+  margin: 0;
+  border: 1px solid #dde3ea;
+  border-radius: 999px;
+  padding: 2px 14px;
+  color: #4e5359;
+}
+.tpl-cls-tag .pv-block[data-type='certificates'] .pv-line-main {
+  font-weight: 400;
+}
+
+/* ---------- 技能：类别标签主题色 ---------- */
+.tpl-cls-tag .pv-flat-label {
+  color: var(--pv-theme);
+}
+
+@media print {
+  .tpl-cls-tag .pv-module-title-text {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}
