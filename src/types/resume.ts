@@ -82,9 +82,13 @@ export interface LayoutSettings {
   lineHeight: number
   moduleSpacing: number // 模块间距(px)
   itemSpacing: number // 条目间距(px)
-  pageMargin: number // mm
-  themeColor: string
-  titleBold: boolean
+pageMargin: number // mm
+themeColor: string
+titleBold: boolean
+/** 页面背景色（缺省为白色，可选字段以兼容旧数据） */
+pageBg?: string
+/** 页面背景花纹 id（'none' 或缺省为无花纹） */
+pagePattern?: string
 }
 
 export interface ResumeDoc {

@@ -193,11 +193,17 @@ const styleVars = computed(() => ({
   fontFamily: layout.fontFamily,
   fontSize: `${layout.fontSize}px`,
   lineHeight: layout.lineHeight,
+  backgroundColor: layout.pageBg || '#fff',
   '--pv-theme': layout.themeColor,
   '--pv-module-spacing': `${layout.moduleSpacing}px`,
   '--pv-item-spacing': `${layout.itemSpacing}px`,
   '--pv-margin-mm': `${layout.pageMargin}mm`,
 }))
+
+/** 背景花纹类名（'none' 或缺省为无） */
+const patternClass = computed(() =>
+  layout.pagePattern && layout.pagePattern !== 'none' ? `pv-pat-${layout.pagePattern}` : '',
+)
 
 const pageCountText = computed(() => `共 ${Math.max(1, pages.value.length)} 页`)
 
@@ -242,8 +248,13 @@ const sideBlocksForPage = (i: number) => (i === 0 ? sideBlocks.value : [])
           :margin-mm="layout.pageMargin"
           :ctx="{ className: store.templateClass }"
           :style-vars="styleVars"
+          :pattern="layout.pagePattern"
         />
-        <div v-if="pages.length === 0" class="pv-page" :style="{ padding: `${layout.pageMargin}mm` }">
+        <div
+          v-if="pages.length === 0"
+          :class="['pv-page', patternClass]"
+          :style="{ padding: `${layout.pageMargin}mm`, backgroundColor: layout.pageBg || '#fff' }"
+        >
           <div class="pv-empty" :style="styleVars">简历内容为空，请在左侧添加模块开始编辑</div>
         </div>
       </div>

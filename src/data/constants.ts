@@ -63,20 +63,30 @@ export const MODULE_CATALOG: { type: Exclude<ModuleType, 'profile'>; title: stri
   { type: 'custom', title: '自定义模块', desc: '自由定义标题与内容' },
 ]
 
-/** 个人信息可选字段（联系方式 / 社交 / 其他） */
+/** 个人信息可选字段（基本信息 / 联系方式 / 求职相关 / 其他） */
 export const PROFILE_FIELD_OPTIONS: { group: string; label: string }[] = [
   { group: '基本信息', label: '性别' },
   { group: '基本信息', label: '年龄' },
+  { group: '基本信息', label: '生日' },
   { group: '基本信息', label: '城市' },
+  { group: '基本信息', label: '工作年限' },
   { group: '基本信息', label: '求职意向' },
   { group: '联系方式', label: '电话' },
   { group: '联系方式', label: '邮箱' },
-  { group: '联系方式', label: '个人网站' },
   { group: '联系方式', label: '微信' },
+  { group: '联系方式', label: 'QQ' },
+  { group: '联系方式', label: '个人网站' },
+  { group: '联系方式', label: 'GitHub' },
+  { group: '求职相关', label: '期望薪资' },
+  { group: '求职相关', label: '入职时间' },
+  { group: '求职相关', label: '最高学历' },
   { group: '其他信息', label: '民族' },
   { group: '其他信息', label: '籍贯' },
   { group: '其他信息', label: '政治面貌' },
   { group: '其他信息', label: '婚姻状况' },
+  { group: '其他信息', label: '身高' },
+  { group: '其他信息', label: '体重' },
+  { group: '其他信息', label: '兴趣爱好' },
   { group: '其他信息', label: 'MBTI' },
 ]
 
@@ -89,7 +99,7 @@ export const FONT_FAMILIES = [
   { label: '默认字体', value: "-apple-system, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif" },
 ]
 
-export const FONT_SIZES = [11, 12, 13, 14, 15, 16].map((n) => ({ label: String(n), value: n }))
+export const FONT_SIZES = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((n) => ({ label: String(n), value: n }))
 
 export const LINE_SPACINGS = [1.2, 1.3, 1.4, 1.5, 1.6, 1.8, 2.0].map((n) => ({
   label: n.toFixed(1),
@@ -107,12 +117,35 @@ export const PAGE_MARGINS = [5, 8, 10, 12, 15, 18, 20].map((n) => ({
 }))
 
 export const THEME_COLORS = [
-  '#000000',
-  '#1f7a5a',
-  '#2c6ec8',
-  '#7c3aed',
-  '#b03a3a',
-  '#c2711c',
-  '#0e7490',
-  '#475569',
+'#000000',
+'#1f7a5a',
+'#2c6ec8',
+'#7c3aed',
+'#b03a3a',
+'#c2711c',
+'#0e7490',
+'#475569',
+]
+
+/** 页面背景色预设（浅色系，避免压过正文） */
+export const PAGE_BG_COLORS = [
+'#ffffff',
+'#fafaf7',
+'#f5f8f6',
+'#f2f6fb',
+'#fdf6ec',
+'#f9f3f6',
+'#f3f4f6',
+'#fffdf5',
+]
+
+/** 页面背景花纹选项（对应 base.css 中的 .pv-pat-* 类） */
+export const PAGE_PATTERNS = [
+{ label: '无', value: 'none' },
+{ label: '圆点', value: 'dots' },
+{ label: '斜纹', value: 'diag' },
+{ label: '网格', value: 'grid' },
+{ label: '菱形', value: 'diamond' },
+{ label: '波浪', value: 'wave' },
+{ label: '十字', value: 'plus' },
 ]
