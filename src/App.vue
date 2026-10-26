@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import EditorHeader from '@/components/EditorHeader.vue'
 import EditorPanel from '@/components/EditorPanel.vue'
 import ResumePreview from '@/components/ResumePreview.vue'
@@ -10,6 +10,9 @@ import ResumeLibrary from '@/components/ResumeLibrary.vue'
 import { useResumeStore } from '@/store/resume'
 
 const store = useResumeStore()
+
+// 开发环境暴露 store 便于调试
+if (import.meta.env.DEV) (window as unknown as Record<string, unknown>).__resumeStore = store
 
 const view = ref<'library' | 'editor'>('library')
 
@@ -38,6 +41,25 @@ function backToLibrary() {
   store.flushSave()
   view.value = 'library'
 }
+
+// ---------- 撤销/重做快捷键 ----------
+function onKeydown(e: KeyboardEvent) {
+  if (view.value !== 'editor') return
+  // 输入框内也走文档级撤销：本应用输入框是受控组件，浏览器原生文本撤销与
+  // Vue 状态渲染不同步，原生撤销表现异常，统一由文档快照接管
+  const mod = e.metaKey || e.ctrlKey
+  if (!mod) return
+  const key = e.key.toLowerCase()
+  if (key === 'z' && !e.shiftKey) {
+    e.preventDefault()
+    store.undo()
+  } else if ((key === 'z' && e.shiftKey) || key === 'y') {
+    e.preventDefault()
+    store.redo()
+  }
+}
+onMounted(() => window.addEventListener('keydown', onKeydown))
+onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
 </script>
 
 <template>

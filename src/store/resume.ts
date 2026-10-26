@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import type {
   LayoutSettings,
   ModuleType,
@@ -45,7 +45,10 @@ export const useResumeStore = defineStore('resume', () => {
     }
     if (!boundId) return
     silentMutation = true
+    // updatedAt 是保存行为产生的时间戳变动，不应进入撤销历史（否则会清空重做栈）
+    suppressHistory = true
     doc.updatedAt = Date.now()
+    setTimeout(() => (suppressHistory = false), 0)
     lib.writeBack(boundId, doc)
     ui.saveState = 'saved'
   }
@@ -64,13 +67,36 @@ export const useResumeStore = defineStore('resume', () => {
     { deep: true, flush: 'sync' },
   )
 
+  /**
+   * 就地替换文档内容。
+   * 注意：不能用 Object.assign(doc, snap) 整体替换——profile/layout/modules 的
+   * 引用会被换掉，而组件（如 ProfileForm/EditorHeader）在 setup 中捕获了旧引用，
+   * 之后界面会操作已脱离文档的旧对象，表现为“数据变了但界面不变”。
+   */
+  function replaceDocContent(snap: ResumeDoc) {
+    doc.name = snap.name
+    doc.templateId = snap.templateId
+    doc.titleStyle = snap.titleStyle
+    doc.profileStyle = snap.profileStyle
+    doc.pageStyle = snap.pageStyle
+    doc.updatedAt = snap.updatedAt
+    Object.assign(doc.profile, snap.profile)
+    Object.assign(doc.layout, snap.layout)
+    doc.modules.splice(0, doc.modules.length, ...snap.modules)
+  }
+
   /** 打开另一份简历进行编辑 */
   function openResume(id: string) {
     flushSave()
     lib.setCurrent(id)
     boundId = id
     const rec = lib.currentRecord
-    if (rec) Object.assign(doc, cloneDoc(rec.doc))
+    if (rec) {
+      restoring = true
+      replaceDocContent(cloneDoc(rec.doc))
+      setTimeout(() => (restoring = false), 0)
+    }
+    clearHistory()
     ui.collapsedModules.clear()
   }
 
@@ -79,7 +105,12 @@ export const useResumeStore = defineStore('resume', () => {
     flushSave()
     boundId = lib.createResume(patch)
     const rec = lib.currentRecord
-    if (rec) Object.assign(doc, cloneDoc(rec.doc))
+    if (rec) {
+      restoring = true
+      replaceDocContent(cloneDoc(rec.doc))
+      setTimeout(() => (restoring = false), 0)
+    }
+    clearHistory()
     ui.collapsedModules.clear()
   }
 
@@ -244,13 +275,87 @@ export const useResumeStore = defineStore('resume', () => {
     Object.assign(doc.layout, t.layout)
   }
 
+  // ---------- 撤销 / 重做（快照式历史，按编辑爆发合并为一步） ----------
+  const HISTORY_LIMIT = 50
+  const undoStack = ref<string[]>([])
+  const redoStack = ref<string[]>([])
+  /** 上一次编辑爆发结束后的文档快照 */
+  let lastJson = JSON.stringify(doc)
+  /** 是否正处于连续编辑爆发中（爆发期间只入栈一次爆发前状态） */
+  let batching = false
+  let batchTimer: ReturnType<typeof setTimeout> | null = null
+  /** 恢复快照期间屏蔽历史记录 */
+  let restoring = false
+  /** 保存时间戳等程序化变动屏蔽历史记录 */
+  let suppressHistory = false
+
+  watch(
+    doc,
+    () => {
+      if (restoring || suppressHistory) return
+      if (!batching) {
+        // 新爆发：把爆发前的状态入撤销栈，并清空重做栈
+        undoStack.value.push(lastJson)
+        if (undoStack.value.length > HISTORY_LIMIT) undoStack.value.shift()
+        redoStack.value = []
+        batching = true
+      }
+      if (batchTimer) clearTimeout(batchTimer)
+      batchTimer = setTimeout(() => {
+        lastJson = JSON.stringify(doc)
+        batching = false
+      }, 600)
+    },
+    { deep: true },
+  )
+
+  /** 应用快照并同步历史基准 */
+  function applySnapshot(json: string) {
+    restoring = true
+    if (batchTimer) {
+      clearTimeout(batchTimer)
+      batchTimer = null
+    }
+    batching = false
+    replaceDocContent(JSON.parse(json))
+    lastJson = json
+    setTimeout(() => (restoring = false), 0)
+  }
+
+  const canUndo = computed(() => undoStack.value.length > 0)
+  const canRedo = computed(() => redoStack.value.length > 0)
+
+  function undo() {
+    if (!undoStack.value.length || restoring) return
+    redoStack.value.push(JSON.stringify(doc))
+    applySnapshot(undoStack.value.pop()!)
+  }
+
+  function redo() {
+    if (!redoStack.value.length || restoring) return
+    undoStack.value.push(JSON.stringify(doc))
+    applySnapshot(redoStack.value.pop()!)
+  }
+
+  /** 切换/新建简历时清空历史 */
+  function clearHistory() {
+    undoStack.value = []
+    redoStack.value = []
+    batching = false
+    if (batchTimer) {
+      clearTimeout(batchTimer)
+      batchTimer = null
+    }
+    lastJson = JSON.stringify(doc)
+  }
+
   /** 当前模板的专属样式类名 */
   const templateClass = computed(() => getTemplate(doc.templateId)?.className ?? '')
   const templateName = computed(() => getTemplate(doc.templateId)?.name ?? '')
 
   function resetResume() {
     const fresh = createDefaultResume()
-    Object.assign(doc, fresh)
+    replaceDocContent(fresh)
     flushSave()
   }
 
@@ -298,5 +403,11 @@ export const useResumeStore = defineStore('resume', () => {
     getBoundId: () => boundId,
     requestOnePage,
     requestDownload,
+    canUndo,
+    canRedo,
+    undo,
+    redo,
+    undoStack,
+    redoStack,
   }
 })

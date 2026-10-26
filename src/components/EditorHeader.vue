@@ -144,6 +144,26 @@ function commitName() {
         <Icon name="eye" :size="18" />
         智能一页
       </button>
+      <button
+        class="eh-item"
+        type="button"
+        title="撤销 (Ctrl+Z)"
+        :disabled="!store.canUndo"
+        @click="store.undo()"
+      >
+        <Icon name="undo" :size="18" />
+        <span class="eh-item-label">撤销</span>
+      </button>
+      <button
+        class="eh-item"
+        type="button"
+        title="重做 (Ctrl+Shift+Z)"
+        :disabled="!store.canRedo"
+        @click="store.redo()"
+      >
+        <Icon name="redo" :size="18" />
+        <span class="eh-item-label">重做</span>
+      </button>
       <button class="eh-item" type="button" title="模块排序" @click="emit('openSort')">
         <Icon name="sort" :size="19" />
         <span class="eh-item-label">排序</span>
@@ -318,6 +338,14 @@ export default {
 .eh-item:hover {
   background: #f0f1f3;
   color: var(--text-main);
+}
+.eh-item:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.eh-item:disabled:hover {
+  background: transparent;
+  color: var(--text-sub);
 }
 /* 操作名称标签：默认展示，弱化颜色不抢控件主体 */
 .eh-item-label {
