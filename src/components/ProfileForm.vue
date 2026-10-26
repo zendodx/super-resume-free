@@ -34,6 +34,16 @@ function addField(label: string) {
   pickerOpen.value = false
 }
 
+// ---------- 自定义字段 ----------
+const customLabel = ref('')
+function addCustomField() {
+  const label = customLabel.value.trim()
+  if (!label || usedLabels.value.has(label)) return
+  store.addProfileField(label)
+  customLabel.value = ''
+  pickerOpen.value = false
+}
+
 function onAvatarChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
@@ -118,6 +128,24 @@ function onAvatarChange(e: Event) {
                 </button>
               </div>
             </template>
+            <!-- 自定义字段 -->
+            <div class="pf-picker-custom">
+              <input
+                v-model="customLabel"
+                class="form-input pf-picker-custom-input"
+                placeholder="自定义字段名，如：抖音号"
+                maxlength="12"
+                @keyup.enter="addCustomField"
+              />
+              <button
+                class="btn btn-primary pf-picker-custom-btn"
+                type="button"
+                :disabled="!customLabel.trim()"
+                @click="addCustomField"
+              >
+                添加
+              </button>
+            </div>
           </div>
         </Transition>
       </div>
@@ -227,7 +255,9 @@ function onAvatarChange(e: Event) {
   position: absolute;
   top: calc(100% + 4px);
   left: 0;
-  width: 300px;
+  width: 320px;
+  max-height: 380px;
+  overflow-y: auto;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -264,6 +294,29 @@ function onAvatarChange(e: Event) {
 }
 .pf-picker-item.used {
   opacity: 0.4;
+  cursor: not-allowed;
+}
+/* 自定义字段输入行 */
+.pf-picker-custom {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.pf-picker-custom-input {
+  flex: 1;
+  height: 30px;
+  font-size: 12px;
+}
+.pf-picker-custom-btn {
+  height: 30px;
+  padding: 0 12px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.pf-picker-custom-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 .pf-avatar-row {

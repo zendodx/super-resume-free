@@ -63,20 +63,30 @@ export const MODULE_CATALOG: { type: Exclude<ModuleType, 'profile'>; title: stri
   { type: 'custom', title: '自定义模块', desc: '自由定义标题与内容' },
 ]
 
-/** 个人信息可选字段（联系方式 / 社交 / 其他） */
+/** 个人信息可选字段（基本信息 / 联系方式 / 求职相关 / 其他） */
 export const PROFILE_FIELD_OPTIONS: { group: string; label: string }[] = [
   { group: '基本信息', label: '性别' },
   { group: '基本信息', label: '年龄' },
+  { group: '基本信息', label: '生日' },
   { group: '基本信息', label: '城市' },
+  { group: '基本信息', label: '工作年限' },
   { group: '基本信息', label: '求职意向' },
   { group: '联系方式', label: '电话' },
   { group: '联系方式', label: '邮箱' },
-  { group: '联系方式', label: '个人网站' },
   { group: '联系方式', label: '微信' },
+  { group: '联系方式', label: 'QQ' },
+  { group: '联系方式', label: '个人网站' },
+  { group: '联系方式', label: 'GitHub' },
+  { group: '求职相关', label: '期望薪资' },
+  { group: '求职相关', label: '入职时间' },
+  { group: '求职相关', label: '最高学历' },
   { group: '其他信息', label: '民族' },
   { group: '其他信息', label: '籍贯' },
   { group: '其他信息', label: '政治面貌' },
   { group: '其他信息', label: '婚姻状况' },
+  { group: '其他信息', label: '身高' },
+  { group: '其他信息', label: '体重' },
+  { group: '其他信息', label: '兴趣爱好' },
   { group: '其他信息', label: 'MBTI' },
 ]
 
