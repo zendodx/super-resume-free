@@ -130,33 +130,43 @@ function commitName() {
       </button>
       <button class="eh-item" type="button" title="模块排序" @click="emit('openSort')">
         <Icon name="sort" :size="19" />
+        <span class="eh-item-label">排序</span>
       </button>
       <div class="eh-item" title="字体">
-        <SelectDropdown v-model="fontValue" :options="FONT_FAMILIES" width="106px" />
+        <span class="eh-item-label">字体</span>
+        <SelectDropdown v-model="fontValue" :options="FONT_FAMILIES" width="96px" />
       </div>
       <div class="eh-item" title="字号">
-        <SelectDropdown v-model="sizeValue" :options="FONT_SIZES" width="60px" />
+        <span class="eh-item-label">字号</span>
+        <SelectDropdown v-model="sizeValue" :options="FONT_SIZES" width="52px" />
       </div>
       <div class="eh-item" title="行距">
-        <SelectDropdown v-model="lineHeightValue" :options="LINE_SPACINGS" width="60px" />
+        <span class="eh-item-label">行距</span>
+        <SelectDropdown v-model="lineHeightValue" :options="LINE_SPACINGS" width="52px" />
       </div>
       <div class="eh-item" title="模块间距">
-        <SelectDropdown v-model="moduleSpacingValue" :options="MODULE_SPACINGS" width="60px" />
+        <span class="eh-item-label">间距</span>
+        <SelectDropdown v-model="moduleSpacingValue" :options="MODULE_SPACINGS" width="52px" />
       </div>
       <div class="eh-item" title="页边距">
-        <SelectDropdown v-model="marginValue" :options="PAGE_MARGINS" width="68px" />
+        <span class="eh-item-label">边距</span>
+        <SelectDropdown v-model="marginValue" :options="PAGE_MARGINS" width="60px" />
       </div>
       <div class="eh-item" title="主题色">
+        <span class="eh-item-label">主题色</span>
         <ColorPickerPopover v-model="colorValue" />
       </div>
       <div class="eh-item" title="页面背景色">
+        <span class="eh-item-label">背景色</span>
         <ColorPickerPopover v-model="bgValue" :colors="PAGE_BG_COLORS" title="页面背景色" />
       </div>
       <div class="eh-item" title="背景花纹">
-        <SelectDropdown v-model="patternValue" :options="PAGE_PATTERNS" width="72px" />
+        <span class="eh-item-label">花纹</span>
+        <SelectDropdown v-model="patternValue" :options="PAGE_PATTERNS" width="62px" />
       </div>
       <button class="eh-item" type="button" title="重置为示例简历" @click="store.resetResume()">
         <Icon name="reset" :size="19" />
+        <span class="eh-item-label">重置</span>
       </button>
 <div class="eh-dd">
 <div v-if="downloadMenuOpen" class="eh-dd-mask" @click="downloadMenuOpen = false" />
@@ -281,6 +291,22 @@ export default {
 .eh-item:hover {
   background: #f0f1f3;
   color: var(--text-main);
+}
+/* 操作名称标签：默认展示，弱化颜色不抢控件主体 */
+.eh-item-label {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-left: 2px;
+  white-space: nowrap;
+}
+.eh-item:hover .eh-item-label {
+  color: var(--text-sub);
+}
+/* 窄屏时隐藏名称标签，回退为纯图标/控件（tooltip 仍可用） */
+@media (max-width: 1360px) {
+  .eh-item-label {
+    display: none;
+  }
 }
 .eh-onepage {
   padding: 0 10px;
