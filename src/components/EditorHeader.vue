@@ -84,6 +84,22 @@ function relativeTime(ts: number): string {
   return new Date(ts).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
 }
 
+// ---------- 重置二次确认 ----------
+const confirmReset = ref(false)
+let confirmResetTimer: ReturnType<typeof setTimeout> | null = null
+function onResetClick() {
+  if (!confirmReset.value) {
+    confirmReset.value = true
+    // 3 秒内未确认自动恢复，避免误触后状态滞留
+    if (confirmResetTimer) clearTimeout(confirmResetTimer)
+    confirmResetTimer = setTimeout(() => (confirmReset.value = false), 3000)
+    return
+  }
+  if (confirmResetTimer) clearTimeout(confirmResetTimer)
+  confirmReset.value = false
+  store.resetResume()
+}
+
 function startEditName() {
   nameInput.value = store.doc.name
   editingName.value = true
@@ -164,10 +180,21 @@ function commitName() {
         <span class="eh-item-label">花纹</span>
         <SelectDropdown v-model="patternValue" :options="PAGE_PATTERNS" width="62px" />
       </div>
-      <button class="eh-item" type="button" title="重置为示例简历" @click="store.resetResume()">
+      <button
+        v-if="!confirmReset"
+        class="eh-item"
+        type="button"
+        title="重置为示例简历"
+        @click="onResetClick"
+      >
         <Icon name="reset" :size="19" />
         <span class="eh-item-label">重置</span>
       </button>
+      <div v-else class="eh-item eh-reset-confirm">
+        <span class="eh-reset-text">重置为示例简历？</span>
+        <button class="eh-reset-yes" type="button" @click="onResetClick">确定</button>
+        <button class="eh-reset-no" type="button" @click="confirmReset = false">取消</button>
+      </div>
 <div class="eh-dd">
 <div v-if="downloadMenuOpen" class="eh-dd-mask" @click="downloadMenuOpen = false" />
 <button class="eh-download" type="button" :disabled="store.ui.downloading" @click.stop="downloadMenuOpen = !downloadMenuOpen">
@@ -307,6 +334,40 @@ export default {
   .eh-item-label {
     display: none;
   }
+}
+/* ---------- 重置二次确认 ---------- */
+.eh-reset-confirm {
+  gap: 6px;
+  background: #fdeeee;
+}
+.eh-reset-confirm:hover {
+  background: #fdeeee;
+}
+.eh-reset-text {
+  font-size: 12px;
+  color: var(--danger);
+  white-space: nowrap;
+}
+.eh-reset-yes,
+.eh-reset-no {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.eh-reset-yes {
+  background: var(--danger);
+  color: #fff;
+}
+.eh-reset-yes:hover {
+  opacity: 0.85;
+}
+.eh-reset-no {
+  border: 1px solid var(--border);
+  color: var(--text-sub);
+}
+.eh-reset-no:hover {
+  color: var(--text-main);
 }
 .eh-onepage {
   padding: 0 10px;
