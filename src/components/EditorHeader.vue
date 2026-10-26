@@ -6,7 +6,9 @@ import {
   FONT_SIZES,
   LINE_SPACINGS,
   MODULE_SPACINGS,
+  PAGE_BG_COLORS,
   PAGE_MARGINS,
+  PAGE_PATTERNS,
 } from '@/data/constants'
 import SelectDropdown from './SelectDropdown.vue'
 import ColorPickerPopover from './ColorPickerPopover.vue'
@@ -47,6 +49,14 @@ const marginValue = computed({
 const colorValue = computed({
   get: () => layout.themeColor,
   set: (v: string) => store.updateLayout({ themeColor: v }),
+})
+const bgValue = computed({
+  get: () => layout.pageBg ?? '#ffffff',
+  set: (v: string) => store.updateLayout({ pageBg: v }),
+})
+const patternValue = computed({
+  get: () => layout.pagePattern ?? 'none',
+  set: (v) => store.updateLayout({ pagePattern: String(v) }),
 })
 
 const savedText = computed(() =>
@@ -138,6 +148,12 @@ function commitName() {
       </div>
       <div class="eh-item" title="主题色">
         <ColorPickerPopover v-model="colorValue" />
+      </div>
+      <div class="eh-item" title="页面背景色">
+        <ColorPickerPopover v-model="bgValue" :colors="PAGE_BG_COLORS" title="页面背景色" />
+      </div>
+      <div class="eh-item" title="背景花纹">
+        <SelectDropdown v-model="patternValue" :options="PAGE_PATTERNS" width="72px" />
       </div>
       <button class="eh-item" type="button" title="重置为示例简历" @click="store.resetResume()">
         <Icon name="reset" :size="19" />

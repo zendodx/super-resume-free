@@ -2,7 +2,10 @@
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { THEME_COLORS } from '@/data/constants'
 
-const props = defineProps<{ modelValue: string }>()
+const props = withDefaults(
+  defineProps<{ modelValue: string; colors?: string[]; title?: string }>(),
+  { colors: () => THEME_COLORS, title: '主题色' },
+)
 const emit = defineEmits<{ (e: 'update:modelValue', v: string): void }>()
 
 const open = ref(false)
@@ -27,7 +30,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
 
 <template>
   <div ref="root" class="cp">
-    <button class="cp-trigger" type="button" title="主题色" @click="toggle">
+    <button class="cp-trigger" type="button" :title="props.title" @click="toggle">
       <span class="cp-swatch" :style="{ background: modelValue }" />
       <Icon name="chevron-down" :size="16" class="cp-caret" :class="{ flip: open }" />
     </button>
@@ -35,7 +38,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
       <div v-if="open" class="cp-pop">
         <div class="cp-grid">
           <button
-            v-for="c in THEME_COLORS"
+            v-for="c in props.colors"
             :key="c"
             class="cp-item"
             :class="{ active: c === modelValue }"

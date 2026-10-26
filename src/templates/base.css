@@ -217,11 +217,54 @@
   color: var(--pv-sidebar-text, #fff);
 }
 
+/* ---------- 页面背景花纹（浅色半透明，跟随主题色，不干扰正文） ---------- */
+/* 圆点 */
+.pv-pat-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--pv-theme) 14%, transparent) 1.2px,
+    transparent 1.3px
+  );
+  background-size: 18px 18px;
+}
+/* 斜纹 */
+.pv-pat-diag {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in srgb, var(--pv-theme) 9%, transparent) 0 1.5px,
+    transparent 1.5px 16px
+  );
+}
+/* 网格 */
+.pv-pat-grid {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--pv-theme) 9%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--pv-theme) 9%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+/* 菱形 */
+.pv-pat-diamond {
+  background-image:
+    linear-gradient(45deg, color-mix(in srgb, var(--pv-theme) 11%, transparent) 1px, transparent 1px),
+    linear-gradient(-45deg, color-mix(in srgb, var(--pv-theme) 11%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+/* 波浪（SVG 中性灰细线，避免压过正文） */
+.pv-pat-wave {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M0 7 Q7 0 14 7 T28 7' fill='none' stroke='%239aa0a6' stroke-opacity='0.35' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 28px 14px;
+}
+/* 十字 */
+.pv-pat-plus {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8 V16 M8 12 H16' fill='none' stroke='%239aa0a6' stroke-opacity='0.4' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
+}
+
 /* ---------- 打印 ---------- */
 @media print {
   .pv-profile-band,
   .pv-profile-banner,
-  .pv-page-sidebar .pv-side-col {
+  .pv-page-sidebar .pv-side-col,
+  .pv-page[class*='pv-pat-'] {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }

@@ -107,12 +107,35 @@ export const PAGE_MARGINS = [5, 8, 10, 12, 15, 18, 20].map((n) => ({
 }))
 
 export const THEME_COLORS = [
-  '#000000',
-  '#1f7a5a',
-  '#2c6ec8',
-  '#7c3aed',
-  '#b03a3a',
-  '#c2711c',
-  '#0e7490',
-  '#475569',
+'#000000',
+'#1f7a5a',
+'#2c6ec8',
+'#7c3aed',
+'#b03a3a',
+'#c2711c',
+'#0e7490',
+'#475569',
+]
+
+/** 页面背景色预设（浅色系，避免压过正文） */
+export const PAGE_BG_COLORS = [
+'#ffffff',
+'#fafaf7',
+'#f5f8f6',
+'#f2f6fb',
+'#fdf6ec',
+'#f9f3f6',
+'#f3f4f6',
+'#fffdf5',
+]
+
+/** 页面背景花纹选项（对应 base.css 中的 .pv-pat-* 类） */
+export const PAGE_PATTERNS = [
+{ label: '无', value: 'none' },
+{ label: '圆点', value: 'dots' },
+{ label: '斜纹', value: 'diag' },
+{ label: '网格', value: 'grid' },
+{ label: '菱形', value: 'diamond' },
+{ label: '波浪', value: 'wave' },
+{ label: '十字', value: 'plus' },
 ]

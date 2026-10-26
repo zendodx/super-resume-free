@@ -17,8 +17,10 @@ defineProps<{
   marginMm: number
   /** 渲染上下文（模板样式类 / 标题风格覆盖） */
   ctx?: PreviewCtx
-  /** 样式变量（字体/字号/行距/主题色/间距） */
+  /** 样式变量（字体/字号/行距/主题色/间距/背景色） */
   styleVars: Record<string, string | number>
+  /** 页面背景花纹 id（'none' 或空为无花纹） */
+  pattern?: string
   /** 个人信息覆盖（缩略图用样例数据） */
   profileOverride?: Profile
 }>()
@@ -27,7 +29,11 @@ defineProps<{
 <template>
   <div
     class="pv-page"
-    :class="[{ 'pv-page-sidebar': sidebar }, ctx?.className ?? '']"
+    :class="[
+      { 'pv-page-sidebar': sidebar },
+      ctx?.className ?? '',
+      pattern && pattern !== 'none' ? `pv-pat-${pattern}` : '',
+    ]"
     :style="{ ...styleVars, ...(sidebar ? {} : { padding: `${marginMm}mm` }) }"
   >
     <template v-if="sidebar">

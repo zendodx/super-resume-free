@@ -41,6 +41,9 @@
     min-height: 296mm !important;
     break-after: page;
     page-break-after: always;
+    /* 保留页面背景色与背景花纹 */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
   body.printing .pv-page:last-child {
     break-after: auto;
