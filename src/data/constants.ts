@@ -99,7 +99,7 @@ export const FONT_FAMILIES = [
   { label: '默认字体', value: "-apple-system, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif" },
 ]
 
-export const FONT_SIZES = [11, 12, 13, 14, 15, 16].map((n) => ({ label: String(n), value: n }))
+export const FONT_SIZES = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map((n) => ({ label: String(n), value: n }))
 
 export const LINE_SPACINGS = [1.2, 1.3, 1.4, 1.5, 1.6, 1.8, 2.0].map((n) => ({
   label: n.toFixed(1),
