@@ -240,6 +240,20 @@ export const useResumeStore = defineStore('resume', () => {
     if (item) item.desc = desc
   }
 
+  /** 更新条目的描述编辑模式（'points' 要点 / 'rich' 富文本） */
+  function updateItemDescType(moduleId: string, itemId: string, descType: 'points' | 'rich') {
+    const m = getModule(moduleId)
+    const item = m?.items.find((x) => x.id === itemId)
+    if (item) item.descType = descType
+  }
+
+  /** 更新条目的富文本描述（HTML 片段） */
+  function updateItemRichDesc(moduleId: string, itemId: string, richDesc: string) {
+    const m = getModule(moduleId)
+    const item = m?.items.find((x) => x.id === itemId)
+    if (item) item.richDesc = richDesc
+  }
+
   // ---------- 个人信息 ----------
   function updateProfile(patch: Partial<ResumeDoc['profile']>) {
     Object.assign(doc.profile, patch)
@@ -389,6 +403,8 @@ export const useResumeStore = defineStore('resume', () => {
     moveItem,
     updateItemField,
     updateItemDesc,
+    updateItemDescType,
+    updateItemRichDesc,
     updateProfile,
     addProfileField,
     updateProfileField,

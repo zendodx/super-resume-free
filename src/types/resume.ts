@@ -20,6 +20,10 @@ export interface ResumeItem {
   fields: Record<string, string>
   /** 描述（每行一条要点） */
   desc: string[]
+  /** 描述编辑模式：'points' 要点列表 / 'rich' 富文本（缺省为要点，兼容旧数据） */
+  descType?: 'points' | 'rich'
+  /** 富文本描述（HTML 片段，仅 descType === 'rich' 时使用；与 desc 双向互转不丢失） */
+  richDesc?: string
 }
 
 /** 联系方式 / 附加信息字段 */

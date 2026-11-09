@@ -17,6 +17,19 @@ const desc = computed({
   set: (v: string[]) => store.updateItemDesc(props.module.id, props.item.id, v),
 })
 
+/** 描述编辑模式（缺省为要点模式，兼容旧数据） */
+const rich = computed(() => props.item.descType === 'rich')
+
+/** 富文本内容（HTML 片段），与纯文本要点分开持久化 */
+const richHtml = computed({
+  get: () => props.item.richDesc ?? '',
+  set: (v: string) => store.updateItemRichDesc(props.module.id, props.item.id, v),
+})
+
+function onRichChange(v: boolean) {
+  store.updateItemDescType(props.module.id, props.item.id, v ? 'rich' : 'points')
+}
+
 /** 摘要式模块的头部预览文本 */
 const summaryText = computed(() => props.item.desc.join(' '))
 </script>
@@ -51,7 +64,14 @@ const summaryText = computed(() => props.item.desc.join(' '))
       </p>
     </div>
 
-    <DescEditor v-else v-model="desc" />
+    <DescEditor
+      v-else
+      v-model="desc"
+      :rich="rich"
+      :rich-html="richHtml"
+      @update:rich="onRichChange"
+      @update:rich-html="richHtml = $event"
+    />
   </div>
 </template>
 

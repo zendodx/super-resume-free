@@ -34,7 +34,9 @@ function partsOf(module: ResumeModule, item: ResumeItem) {
 }
 
 const itemVisible = (item: ResumeItem) =>
-  Object.values(item.fields).some((v) => v && v.trim()) || item.desc.some((d) => d && d.trim())
+  Object.values(item.fields).some((v) => v && v.trim()) ||
+  item.desc.some((d) => d && d.trim()) ||
+  (item.descType === 'rich' && !!(item.richDesc ?? '').replace(/<[^>]*>/g, '').trim())
 
 const NO_BORDER = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' } as const
 const NO_BORDERS = {
