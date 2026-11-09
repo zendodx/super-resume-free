@@ -60,6 +60,48 @@ function onKeydown(e: KeyboardEvent) {
 }
 onMounted(() => window.addEventListener('keydown', onKeydown))
 onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
+
+// ---------- 左侧编辑栏宽度（可拖拽调节） ----------
+const PANEL_WIDTH_KEY = 'srf.panelWidth'
+const PANEL_MIN = 380
+const PANEL_MAX = 900
+const PANEL_DEFAULT = 560
+
+function clampPanelWidth(w: number) {
+  return Math.min(PANEL_MAX, Math.max(PANEL_MIN, Math.round(w)))
+}
+
+const panelWidth = ref(clampPanelWidth(Number(localStorage.getItem(PANEL_WIDTH_KEY)) || PANEL_DEFAULT))
+const resizing = ref(false)
+
+function onResizeStart(e: MouseEvent) {
+  e.preventDefault()
+  resizing.value = true
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+}
+
+function onResizing(e: MouseEvent) {
+  if (!resizing.value) return
+  panelWidth.value = clampPanelWidth(e.clientX)
+}
+
+function onResizeEnd() {
+  if (!resizing.value) return
+  resizing.value = false
+  document.body.style.cursor = ''
+  document.body.style.userSelect = ''
+  localStorage.setItem(PANEL_WIDTH_KEY, String(panelWidth.value))
+}
+
+onMounted(() => {
+  window.addEventListener('mousemove', onResizing)
+  window.addEventListener('mouseup', onResizeEnd)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('mousemove', onResizing)
+  window.removeEventListener('mouseup', onResizeEnd)
+})
 </script>
 
 <template>
@@ -76,7 +118,15 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
         @back="backToLibrary"
       />
       <div class="app-main">
-        <EditorPanel @open-add="addVisible = true" />
+        <EditorPanel :style="{ width: panelWidth + 'px' }" @open-add="addVisible = true" />
+        <div
+          class="app-resizer"
+          :class="{ active: resizing }"
+          title="拖动调节编辑栏宽度"
+          @mousedown="onResizeStart"
+        >
+          <span class="app-resizer-grip" />
+        </div>
         <ResumePreview />
       </div>
       <ModuleSortDialog v-if="sortVisible" @close="sortVisible = false" />
@@ -96,5 +146,32 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown))
   flex: 1;
   min-height: 0;
   display: flex;
+}
+.app-resizer {
+  width: 6px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  position: relative;
+  z-index: 5;
+  transition: background 0.15s;
+}
+.app-resizer:hover,
+.app-resizer.active {
+  background: rgba(59, 130, 246, 0.25);
+}
+.app-resizer-grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2px;
+  height: 34px;
+  border-radius: 2px;
+  background: #c3c8cf;
+}
+.app-resizer:hover .app-resizer-grip,
+.app-resizer.active .app-resizer-grip {
+  background: var(--brand);
 }
 </style>

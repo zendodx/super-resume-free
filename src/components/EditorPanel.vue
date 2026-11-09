@@ -28,7 +28,8 @@ const emit = defineEmits<{ (e: 'openAdd'): void }>()
 
 <style scoped>
 .ep {
-  width: 460px;
+  /* 默认宽度（App.vue 会以内联 style 覆盖并持久化用户拖拽的宽度） */
+  width: 560px;
   flex-shrink: 0;
   background: var(--bg-page);
   border-right: 1px solid var(--border);
