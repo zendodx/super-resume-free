@@ -1,6 +1,7 @@
 import { toSvg } from 'html-to-image'
 import type { ResumeDoc, ResumeItem, ResumeModule } from '@/types/resume'
 import { MODULE_SCHEMAS } from '@/data/constants'
+import { richToMarkdownLines } from '@/utils/richText'
 
 /** 导出格式 */
 export type DownloadFormat = 'pdf' | 'png' | 'word' | 'md' | 'print'
@@ -105,11 +106,17 @@ function partsOf(module: ResumeModule, item: ResumeItem) {
       .filter((f) => f.role === role)
       .map((f) => item.fields[f.key])
       .filter(Boolean)
-  return { main: pick('main').join(' - '), subs: pick('sub'), right: pick('right').join(' - ') }
+  const subs = pick('sub')
+  for (const cf of item.customFields ?? []) {
+    if (cf.value.trim()) subs.push(cf.value.trim())
+  }
+  return { main: pick('main').join(' - '), subs, right: pick('right').join(' - ') }
 }
 
 const itemVisible = (item: ResumeItem) =>
-  Object.values(item.fields).some((v) => v && v.trim()) || item.desc.some((d) => d && d.trim())
+  Object.values(item.fields).some((v) => v && v.trim()) ||
+  item.desc.some((d) => d && d.trim()) ||
+  (item.descType === 'rich' && !!(item.richDesc ?? '').replace(/<[^>]*>/g, '').trim())
 
 const LINE_TYPES = ['awards', 'certificates']
 const FLAT_TYPES = ['skills', 'personal_summary']
@@ -128,7 +135,10 @@ export function resumeToMarkdown(doc: ResumeDoc): string {
     lines.push('', `## ${m.title}`)
     for (const item of items) {
       const { main, subs, right } = partsOf(m, item)
-      const desc = item.desc.map((d) => d.trim()).filter(Boolean)
+      const desc =
+        item.descType === 'rich' && (item.richDesc ?? '').trim()
+          ? richToMarkdownLines(item.richDesc ?? '')
+          : item.desc.map((d) => d.trim()).filter(Boolean)
       if (m.type === 'personal_summary') {
         desc.forEach((d) => lines.push('', d))
       } else if (LINE_TYPES.includes(m.type)) {

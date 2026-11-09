@@ -77,6 +77,9 @@ function pickFormat(fmt: DownloadFormat) {
   store.requestDownload(fmt)
 }
 
+// ---------- 更多操作菜单 ----------
+const moreMenuOpen = ref(false)
+
 function relativeTime(ts: number): string {
   const diff = Math.floor((Date.now() - ts) / 1000)
   if (diff < 60) return '刚刚'
@@ -164,10 +167,6 @@ function commitName() {
         <Icon name="redo" :size="18" />
         <span class="eh-item-label">重做</span>
       </button>
-      <button class="eh-item" type="button" title="模块排序" @click="emit('openSort')">
-        <Icon name="sort" :size="19" />
-        <span class="eh-item-label">排序</span>
-      </button>
       <div class="eh-item" title="字体">
         <span class="eh-item-label">字体</span>
         <SelectDropdown v-model="fontValue" :options="FONT_FAMILIES" width="96px" />
@@ -188,32 +187,56 @@ function commitName() {
         <span class="eh-item-label">边距</span>
         <SelectDropdown v-model="marginValue" :options="PAGE_MARGINS" width="60px" />
       </div>
+      <button class="eh-item" type="button" title="模块排序" @click="emit('openSort')">
+        <Icon name="sort" :size="19" />
+        <span class="eh-item-label">排序</span>
+      </button>
       <div class="eh-item" title="主题色">
         <span class="eh-item-label">主题色</span>
         <ColorPickerPopover v-model="colorValue" />
       </div>
-      <div class="eh-item" title="页面背景色">
-        <span class="eh-item-label">背景色</span>
-        <ColorPickerPopover v-model="bgValue" :colors="PAGE_BG_COLORS" title="页面背景色" />
-      </div>
-      <div class="eh-item" title="背景花纹">
-        <span class="eh-item-label">花纹</span>
-        <SelectDropdown v-model="patternValue" :options="PAGE_PATTERNS" width="62px" />
-      </div>
-      <button
-        v-if="!confirmReset"
-        class="eh-item"
-        type="button"
-        title="重置为示例简历"
-        @click="onResetClick"
-      >
-        <Icon name="reset" :size="19" />
-        <span class="eh-item-label">重置</span>
-      </button>
-      <div v-else class="eh-item eh-reset-confirm">
-        <span class="eh-reset-text">重置为示例简历？</span>
-        <button class="eh-reset-yes" type="button" @click="onResetClick">确定</button>
-        <button class="eh-reset-no" type="button" @click="confirmReset = false">取消</button>
+
+      <!-- ---------- 更多操作：低频设置收进下拉面板 ---------- -->
+      <div class="eh-more">
+        <div v-if="moreMenuOpen" class="eh-more-mask" @click="moreMenuOpen = false" />
+        <button
+          class="eh-item eh-more-trigger"
+          :class="{ open: moreMenuOpen }"
+          type="button"
+          @click.stop="moreMenuOpen = !moreMenuOpen"
+        >
+          <Icon name="more" :size="19" />
+          <span class="eh-item-label">更多操作</span>
+          <Icon name="chevron-down" :size="13" class="eh-more-caret" :class="{ flip: moreMenuOpen }" />
+        </button>
+        <div v-if="moreMenuOpen" class="eh-more-menu" @click.stop>
+          <div class="eh-more-row">
+            <div class="eh-more-item" title="背景花纹">
+              <span class="eh-more-label">花纹</span>
+              <SelectDropdown v-model="patternValue" :options="PAGE_PATTERNS" width="62px" />
+            </div>
+            <div class="eh-more-item" title="页面背景色">
+              <span class="eh-more-label">背景色</span>
+              <ColorPickerPopover v-model="bgValue" :colors="PAGE_BG_COLORS" title="页面背景色" />
+            </div>
+          </div>
+          <div class="eh-more-divider" />
+          <button
+            v-if="!confirmReset"
+            class="eh-more-action eh-more-danger"
+            type="button"
+            title="重置为示例简历"
+            @click="confirmReset = true"
+          >
+            <Icon name="reset" :size="17" />
+            重置为示例简历
+          </button>
+          <div v-else class="eh-more-reset-confirm">
+            <span class="eh-more-reset-text">重置为示例简历？</span>
+            <button class="eh-more-reset-yes" type="button" @click="onResetClick">确定</button>
+            <button class="eh-more-reset-no" type="button" @click="confirmReset = false">取消</button>
+          </div>
+        </div>
       </div>
 <div class="eh-dd">
 <div v-if="downloadMenuOpen" class="eh-dd-mask" @click="downloadMenuOpen = false" />
@@ -363,38 +386,115 @@ export default {
     display: none;
   }
 }
-/* ---------- 重置二次确认 ---------- */
-.eh-reset-confirm {
-  gap: 6px;
+/* ---------- 更多操作下拉 ---------- */
+.eh-more {
+  position: relative;
+}
+.eh-more-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+.eh-more-trigger.open {
+  background: #f0f1f3;
+  color: var(--text-main);
+}
+.eh-more-caret {
+  color: var(--text-light);
+  transition: transform 0.15s;
+}
+.eh-more-caret.flip {
+  transform: rotate(180deg);
+}
+.eh-more-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  z-index: 201;
+  width: 300px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 14px;
+}
+.eh-more-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.eh-more-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.eh-more-label {
+  font-size: 12px;
+  color: var(--text-light);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eh-more-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 0;
+}
+.eh-more-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-main);
+  text-align: left;
+}
+.eh-more-action:hover {
+  background: #f0f1f3;
+}
+.eh-more-action .icon {
+  color: var(--text-light);
+}
+.eh-more-danger:hover {
+  background: #fdf0f0;
+  color: var(--danger);
+}
+.eh-more-danger .icon {
+  color: var(--danger);
+}
+.eh-more-reset-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
   background: #fdeeee;
 }
-.eh-reset-confirm:hover {
-  background: #fdeeee;
-}
-.eh-reset-text {
+.eh-more-reset-text {
   font-size: 12px;
   color: var(--danger);
-  white-space: nowrap;
 }
-.eh-reset-yes,
-.eh-reset-no {
+.eh-more-reset-yes,
+.eh-more-reset-no {
   font-size: 12px;
   padding: 2px 8px;
   border-radius: 4px;
-  white-space: nowrap;
 }
-.eh-reset-yes {
+.eh-more-reset-yes {
   background: var(--danger);
   color: #fff;
 }
-.eh-reset-yes:hover {
+.eh-more-reset-yes:hover {
   opacity: 0.85;
 }
-.eh-reset-no {
+.eh-more-reset-no {
   border: 1px solid var(--border);
   color: var(--text-sub);
 }
-.eh-reset-no:hover {
+.eh-more-reset-no:hover {
   color: var(--text-main);
 }
 .eh-onepage {

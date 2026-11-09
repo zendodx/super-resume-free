@@ -87,10 +87,15 @@ function mainOf(module: ResumeModule, item: ResumeItem): string {
 
 function subsOf(module: ResumeModule, item: ResumeItem): string[] {
   const schema = MODULE_SCHEMAS[module.type as keyof typeof MODULE_SCHEMAS] ?? []
-  return schema
+  const subs = schema
     .filter((f) => f.role === 'sub')
     .map((f) => item.fields[f.key])
     .filter(Boolean)
+  // 自定义字段有值时以「值」形式追加在标题行（与 sub 字段同层级）
+  for (const cf of item.customFields ?? []) {
+    if (cf.value.trim()) subs.push(cf.value.trim())
+  }
+  return subs
 }
 
 function rightOf(module: ResumeModule, item: ResumeItem): string {
@@ -104,8 +109,32 @@ function rightOf(module: ResumeModule, item: ResumeItem): string {
 
 const itemVisible = (item: ResumeItem) => {
   const hasField = Object.values(item.fields).some((v) => v && v.trim())
+  const hasCustom = (item.customFields ?? []).some((cf) => cf.value.trim())
+  const hasRich = item.descType === 'rich' && !!(item.richDesc ?? '').replace(/<[^>]*>/g, '').trim()
   const hasDesc = item.desc.some((d) => d && d.trim())
-  return hasField || hasDesc
+  return hasField || hasCustom || hasRich || hasDesc
+}
+
+const sanitizedRich = (html: string): string => {
+  if (!html.trim()) return ''
+  const doc = new DOMParser().parseFromString(`<div>${html}</div>`, 'text/html')
+  const root = doc.body.firstElementChild as HTMLElement | null
+  if (!root) return ''
+  // 白名单之外的节点直接移除
+  const ALLOWED = new Set(['P', 'DIV', 'UL', 'OL', 'LI', 'BR', 'B', 'STRONG', 'I', 'EM', 'U', 'A', 'SPAN'])
+  root.querySelectorAll('*').forEach((el) => {
+    if (!ALLOWED.has(el.tagName)) {
+      el.replaceWith(...el.childNodes)
+    }
+  })
+  // 只保留白名单属性
+  const ALLOWED_ATTRS = new Set(['href', 'title'])
+  root.querySelectorAll('*').forEach((el) => {
+    ;[...el.attributes].forEach((a) => {
+      if (!ALLOWED_ATTRS.has(a.name) || /^\s*javascript:/i.test(a.value)) el.removeAttribute(a.name)
+    })
+  })
+  return root.innerHTML
 }
 
 const contactList = computed(() => profile.value.contacts.filter((c) => c.value.trim()))
@@ -149,7 +178,8 @@ const contactList = computed(() => profile.value.contacts.filter((c) => c.value.
           <span v-if="b.module.type === 'skills' && mainOf(b.module, item)" class="pv-flat-label">
             {{ mainOf(b.module, item) }}：
           </span>
-          <span class="pv-flat-text">{{ item.desc.filter((d) => d.trim()).join('；') }}</span>
+          <span v-if="item.descType === 'rich'" class="pv-rich-flat" v-html="sanitizedRich(item.richDesc ?? '')" />
+          <span v-else class="pv-flat-text">{{ item.desc.filter((d) => d.trim()).join('；') }}</span>
         </div>
 
         <!-- 常规模块：标题行 + 要点列表 -->
@@ -161,9 +191,15 @@ const contactList = computed(() => profile.value.contacts.filter((c) => c.value.
             </div>
             <span class="pv-item-right">{{ rightOf(b.module, item) }}</span>
           </div>
-          <ul v-if="item.desc.some((d) => d.trim())" class="pv-desc">
+          <ul v-if="item.descType !== 'rich' && item.desc.some((d) => d.trim())" class="pv-desc">
             <li v-for="(d, i) in item.desc.filter((x) => x.trim())" :key="i">{{ d }}</li>
           </ul>
+          <!-- 富文本模式：直接渲染受控 HTML 片段 -->
+          <div
+            v-else-if="(item.richDesc ?? '').replace(/<[^>]*>/g, '').trim()"
+            class="pv-rich-desc"
+            v-html="sanitizedRich(item.richDesc ?? '')"
+          />
         </div>
       </template>
     </div>
@@ -224,6 +260,39 @@ const contactList = computed(() => profile.value.contacts.filter((c) => c.value.
 .pv-desc li {
   list-style: disc outside;
   word-break: break-all;
+}
+
+/* ---------- 富文本描述 ---------- */
+.pv-rich-desc,
+.pv-rich-flat {
+  word-break: break-all;
+  font-size: inherit;
+  line-height: inherit;
+}
+.pv-rich-desc :deep(p),
+.pv-rich-flat :deep(p) {
+  margin: 0 0 2px;
+}
+.pv-rich-desc :deep(p:last-child),
+.pv-rich-flat :deep(p:last-child) {
+  margin-bottom: 0;
+}
+.pv-rich-desc :deep(ul),
+.pv-rich-desc :deep(ol),
+.pv-rich-flat :deep(ul),
+.pv-rich-flat :deep(ol) {
+  margin: 0 0 2px;
+  padding-left: 1.2em;
+}
+.pv-rich-desc :deep(ul) {
+  list-style: disc outside;
+}
+.pv-rich-desc :deep(ol) {
+  list-style: decimal outside;
+}
+.pv-rich-desc :deep(a) {
+  color: inherit;
+  text-decoration: underline;
 }
 
 /* ---------- 单行式（荣誉/证书） ---------- */
