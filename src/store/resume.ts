@@ -254,6 +254,37 @@ export const useResumeStore = defineStore('resume', () => {
     if (item) item.richDesc = richDesc
   }
 
+  /** 添加自定义字段 */
+  function addItemCustomField(moduleId: string, itemId: string, label: string) {
+    const m = getModule(moduleId)
+    const item = m?.items.find((x) => x.id === itemId)
+    if (!item || !label.trim()) return
+    if (!item.customFields) item.customFields = []
+    item.customFields.push({ id: uid(), label: label.trim(), value: '' })
+  }
+
+  /** 更新自定义字段（标签或值） */
+  function updateItemCustomField(
+    moduleId: string,
+    itemId: string,
+    fieldId: string,
+    patch: { label?: string; value?: string },
+  ) {
+    const m = getModule(moduleId)
+    const item = m?.items.find((x) => x.id === itemId)
+    const f = item?.customFields?.find((x) => x.id === fieldId)
+    if (f) Object.assign(f, patch)
+  }
+
+  /** 删除自定义字段 */
+  function removeItemCustomField(moduleId: string, itemId: string, fieldId: string) {
+    const m = getModule(moduleId)
+    const item = m?.items.find((x) => x.id === itemId)
+    if (!item?.customFields) return
+    const i = item.customFields.findIndex((x) => x.id === fieldId)
+    if (i >= 0) item.customFields.splice(i, 1)
+  }
+
   // ---------- 个人信息 ----------
   function updateProfile(patch: Partial<ResumeDoc['profile']>) {
     Object.assign(doc.profile, patch)
@@ -405,6 +436,9 @@ export const useResumeStore = defineStore('resume', () => {
     updateItemDesc,
     updateItemDescType,
     updateItemRichDesc,
+    addItemCustomField,
+    updateItemCustomField,
+    removeItemCustomField,
     updateProfile,
     addProfileField,
     updateProfileField,

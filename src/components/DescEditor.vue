@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import RichTextEditor from './RichTextEditor.vue'
+import TipLabel from './TipLabel.vue'
 import { pointsToRich, richToPoints } from '@/utils/richText'
 
 const props = defineProps<{
@@ -93,9 +94,10 @@ function onRichInput(html: string) {
 <template>
   <div class="de">
     <div class="de-head">
-      <label class="form-label">
-        {{ rich ? '具体内容（富文本，支持加粗 / 斜体 / 下划线 / 列表）' : '具体内容（每行一个要点，建议使用「动词 + 做了什么 + 结果」）' }}
-      </label>
+      <TipLabel
+        :label="'具体内容'"
+        :tip="rich ? '富文本模式：支持加粗 / 斜体 / 下划线 / 列表' : '每行一个要点，建议使用「动词 + 做了什么 + 结果」'"
+      />
       <div class="de-mode">
         <button
           type="button"
@@ -148,13 +150,18 @@ function onRichInput(html: string) {
 <style scoped>
 .de-head {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+}
+.de-head :deep(.tl-text) {
+  font-weight: 500;
 }
 .de-head .form-label {
   margin-bottom: 0;
+  flex: 1;
+  min-width: 0;
 }
 .de-mode {
   display: flex;

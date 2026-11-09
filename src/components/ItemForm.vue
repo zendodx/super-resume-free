@@ -4,6 +4,7 @@ import type { ResumeItem, ResumeModule } from '@/types/resume'
 import { MODULE_SCHEMAS } from '@/data/constants'
 import { useResumeStore } from '@/store/resume'
 import DescEditor from './DescEditor.vue'
+import TipLabel from './TipLabel.vue'
 
 const props = defineProps<{ module: ResumeModule; item: ResumeItem }>()
 const store = useResumeStore()
@@ -38,7 +39,7 @@ const summaryText = computed(() => props.item.desc.join(' '))
   <div class="if">
     <div v-if="schema.length" class="if-fields" :class="{ single: schema.length === 1 }">
       <div v-for="f in schema" :key="f.key" class="if-field">
-        <label class="form-label">{{ f.label }}</label>
+        <TipLabel :label="f.label" :tip="f.tip" />
         <input
           class="form-input"
           :value="item.fields[f.key] ?? ''"
@@ -49,12 +50,15 @@ const summaryText = computed(() => props.item.desc.join(' '))
     </div>
 
     <div v-if="module.type === 'personal_summary'" class="if-summary">
-      <label class="form-label">个人总结</label>
+      <TipLabel
+        label="个人总结"
+        tip="用 3-4 行概括你的核心竞争力：背景 + 核心技能 + 亮点成果，建议控制在 300 字以内"
+      />
       <textarea
         class="form-input if-textarea"
         rows="5"
         :value="item.desc.join('\n')"
-        placeholder="用 3-4 行概括你的核心竞争力：背景 + 核心技能 + 亮点成果"
+        placeholder="概括你的核心竞争力"
         @input="
           store.updateItemDesc(module.id, item.id, ($event.target as HTMLTextAreaElement).value.split('\n'))
         "
@@ -86,7 +90,8 @@ const summaryText = computed(() => props.item.desc.join(' '))
 .if-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 12px;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 .if-fields.single {
   grid-template-columns: 1fr;

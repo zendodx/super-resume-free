@@ -2,6 +2,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useResumeStore } from '@/store/resume'
 import { PROFILE_FIELD_OPTIONS } from '@/data/constants'
+import TipLabel from './TipLabel.vue'
 
 const store = useResumeStore()
 const profile = store.doc.profile
@@ -151,7 +152,7 @@ function onAvatarChange(e: Event) {
       </div>
 
       <div class="pf-avatar-row">
-        <label class="form-label">证件照（选填）</label>
+        <TipLabel label="证件照" tip="选填；建议使用正装免冠照，正方形效果最佳" />
         <div class="pf-avatar">
           <img v-if="profile.avatar" :src="profile.avatar" alt="avatar" class="pf-avatar-img" />
           <div v-else class="pf-avatar-empty">

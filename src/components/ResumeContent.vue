@@ -87,10 +87,15 @@ function mainOf(module: ResumeModule, item: ResumeItem): string {
 
 function subsOf(module: ResumeModule, item: ResumeItem): string[] {
   const schema = MODULE_SCHEMAS[module.type as keyof typeof MODULE_SCHEMAS] ?? []
-  return schema
+  const subs = schema
     .filter((f) => f.role === 'sub')
     .map((f) => item.fields[f.key])
     .filter(Boolean)
+  // 自定义字段有值时以「值」形式追加在标题行（与 sub 字段同层级）
+  for (const cf of item.customFields ?? []) {
+    if (cf.value.trim()) subs.push(cf.value.trim())
+  }
+  return subs
 }
 
 function rightOf(module: ResumeModule, item: ResumeItem): string {
@@ -104,9 +109,10 @@ function rightOf(module: ResumeModule, item: ResumeItem): string {
 
 const itemVisible = (item: ResumeItem) => {
   const hasField = Object.values(item.fields).some((v) => v && v.trim())
+  const hasCustom = (item.customFields ?? []).some((cf) => cf.value.trim())
   const hasRich = item.descType === 'rich' && !!(item.richDesc ?? '').replace(/<[^>]*>/g, '').trim()
   const hasDesc = item.desc.some((d) => d && d.trim())
-  return hasField || hasRich || hasDesc
+  return hasField || hasCustom || hasRich || hasDesc
 }
 
 const sanitizedRich = (html: string): string => {

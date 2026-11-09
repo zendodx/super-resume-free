@@ -30,11 +30,16 @@ function partsOf(module: ResumeModule, item: ResumeItem) {
       .filter((f) => f.role === role)
       .map((f) => item.fields[f.key])
       .filter(Boolean)
-  return { main: pick('main').join(' - '), subs: pick('sub'), right: pick('right').join(' - ') }
+  const subs = pick('sub')
+  for (const cf of item.customFields ?? []) {
+    if (cf.value.trim()) subs.push(cf.value.trim())
+  }
+  return { main: pick('main').join(' - '), subs, right: pick('right').join(' - ') }
 }
 
 const itemVisible = (item: ResumeItem) =>
   Object.values(item.fields).some((v) => v && v.trim()) ||
+  (item.customFields ?? []).some((cf) => cf.value.trim()) ||
   item.desc.some((d) => d && d.trim()) ||
   (item.descType === 'rich' && !!(item.richDesc ?? '').replace(/<[^>]*>/g, '').trim())
 
